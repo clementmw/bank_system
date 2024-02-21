@@ -1,25 +1,24 @@
 #models
-
 # from sqlalchemy_serializer import SerializerMixin
 from flask_sqlalchemy import SQLAlchemy
+# import re
 
 db = SQLAlchemy()
 
 class User(db.Model):
     __tablename__ = 'users'
-    id = db.Columb(db.Integer, primary_key = True)
-    username = db.Column(db.String)
+    id = db.Column(db.Integer, primary_key = True)
+    username = db.Column(db.String, nullable = False)
     phone = db.Column(db.Integer)
     address = db.Column(db.String)
-    # password = 
-
+    password = db.Column(db.String, nullable = False)
     # relationship to account
     accounts = db.relationship('Account', backref='user')
     transactions = db.relationship('Transaction', backref='user')
-
-
     created_at = db.Column(db.DateTime,server_default=db.func.now())
     updated_at = db.Column(db.DateTime, onupdate=db.func.now())
+
+    # validates email
 
 class Account(db.Model):
     __tablename__ = 'accounts'
