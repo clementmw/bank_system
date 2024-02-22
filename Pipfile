@@ -24,6 +24,7 @@ alembic = "*"
 pytz = "*"
 six = "*"
 werkzeug = "*"
+flask-bcrypt = "*"
 
 [dev-packages]
 
