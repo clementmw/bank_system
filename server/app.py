@@ -6,6 +6,7 @@ from flask import Flask,make_response,jsonify,request,session
 from flask_cors import CORS
 from flask_restful import Api,Resource
 from flask_bcrypt import Bcrypt
+from werkzeug.exceptions import NotFound
 
 app = Flask(__name__)
 
@@ -20,6 +21,14 @@ api=Api(app)
 bcrypt = Bcrypt(app)
 CORS(app) #connect frontend 
 
+@app.errorhandler(NotFound)
+def handle_not_found(e):
+    response= make_response("NotFound: The requested resource not found", 404)
+    return response
+
+@app.route('/')
+def index():
+    return '<h1>Messaging App</h1>'
 
 class Signup(Resource):
     def get(self):
@@ -154,7 +163,7 @@ class CreateTransaction(Resource):
         if amount > account.balance:
             return {'message': 'Insufficient funds for withdrawal'}, 400
         else:
-            # Assuming a withdrawal decreases the account balance
+            #withdrawal decreases the account balance
             account.balance -= amount
 
             # Create a new transaction record
