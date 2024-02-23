@@ -47,8 +47,10 @@ class Signup(Resource):
         user = User.query.filter_by(username=username).first()
         emailaddress = User.query.filter_by(email=email).first()
 
-        if user or emailaddress:
-            return {'message':'details filled already exists'},400
+        if user:
+            return {'error':'username already exists rename and try again'},404
+        if emailaddress:
+            return {'error':'email already exists rename and try again'},404
         else:
             password = bcrypt.generate_password_hash(hashed_password.encode('utf-8')).decode('utf-8')
             newuser = User(username=username,phone=phone,email=email,address=address,hashed_password=password)
@@ -67,7 +69,15 @@ class Login(Resource):
       data = request.get_json()
       username = data['username']
       user = User.query.filter_by(username = username).first()
-      if user:
+      if not user:
+        return {'error': '401 Unauthorized'}, 401 
+      else:
+            # check password matches hash stored in database.
+            # if password matches, return user object. Otherwise, return 401 Unauthorized.
+            # check_password_hash(hashed_password, password)
+            # hashed_password = user.hashed_password
+            # password = data['password']
+       
             if bcrypt.check_password_hash(user.hashed_password,data['password']):
                 session['user_id'] = user.id
                 response = make_response(jsonify(user.serialize()), 200)

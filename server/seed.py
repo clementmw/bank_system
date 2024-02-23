@@ -1,6 +1,6 @@
 #seed
 from faker import Faker
-from models import User,db,Account,Transaction
+from models import User,db,Account,Transaction,Reviews
 fake = Faker()
 from app import app
 from flask_bcrypt import Bcrypt
@@ -40,5 +40,16 @@ with app.app_context():
     db.session.add(transaction2)
     db.session.commit()
 
-
-   
+    reviews = [
+        {"customer_name": "John Doe", "review": "I've had a fantastic experience with this bank. The customer service is top-notch, and the staff is always helpful and friendly."},
+        {"customer_name": "Jane Smith", "review": "The online banking services provided by this bank are excellent. It's convenient, user-friendly, and secure."},
+        {"customer_name": "Robert Johnson", "review": "I appreciate the transparency of this bank. There are no hidden fees, and the account statements are clear and easy to understand."},
+        {"customer_name": "Lisa Williams", "review": "I recently applied for a loan, and the process was smooth and efficient. The bank offers competitive interest rates."},
+        {"customer_name": "Michael Brown", "review": "The mobile app is a game-changer. It allows me to manage my accounts, transfer funds, and pay bills on the go."},
+        {"customer_name": "Emily Davis", "review": "I've been a customer for years, and I trust this bank with my finances. The security measures in place give me peace of mind."}
+       ]
+    for review_data in reviews:
+            new_review = Reviews(**review_data)
+            db.session.add(new_review)
+            db.session.commit()
+    

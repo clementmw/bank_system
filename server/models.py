@@ -23,12 +23,14 @@ class User(db.Model,SerializerMixin):
     created_at = db.Column(db.DateTime,server_default=db.func.now())
     updated_at = db.Column(db.DateTime, onupdate=db.func.now())
 
-    # # validates email
-    # @validates('email')
-    # def validate_email(self, key, email):
-    #     email_pattern = r'^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$'
-    #     if not re.match(email_pattern, email):
-    #         raise ValueError('Invalid email format')
+    # validates email
+    @validates('email')
+    def validate_email(self, key, email):
+        email_pattern = r'^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$'    
+        if not re.match(email_pattern, email):
+            raise ValueError('Invalid email format')
+        
+        return email
         
      # Password getter and setter methods
     @hybrid_property
@@ -90,6 +92,18 @@ class Transaction(db.Model,SerializerMixin):
             'user_id':self.user_id,
             'account_id':self.account_id
         }
+class Reviews(db.Model,SerializerMixin):
+    __tablename__ = 'reviews'
 
+    id = db.Column(db.Integer, primary_key = True)
+    customer_name = db.Column(db.String)
+    review = db.Column(db.String)
+
+    def serialize(self):
+        return {
+            'id':self.id,
+            'customer_name': self.customer_name,
+            'review': self.review
+        }
 
 
