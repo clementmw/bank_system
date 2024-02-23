@@ -1,8 +1,11 @@
 import React from 'react'
+// import Testimonial from './Testimonial'
 
 function Home() {
   return (
-    <div>Home</div>
+    <div>Home
+    {/* <Testimonial/> */}
+    </div>
   )
 }
 

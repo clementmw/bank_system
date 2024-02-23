@@ -19,7 +19,7 @@ const handlesubmit = (e)=> {
   .then(res =>{
     // alert('login success')
     console.log(res.data)
-    setSubmit('success')
+    // setSubmit('success')
     navigate('/');
 
   })

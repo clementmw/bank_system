@@ -1,6 +1,6 @@
 #app
 
-from models import User,Account,Transaction,db
+from models import User,Account,Transaction,db,Reviews
 from flask_migrate import Migrate
 from flask import Flask,make_response,jsonify,request,session
 from flask_cors import CORS
@@ -93,7 +93,8 @@ class CheckSession(Resource):
         if session.get('user_id'):
             user = User.query.filter(User.id == session['user_id']).first()
             return user.serialize(), 200
-        return {'error': '401 Resource not found'}, 401
+        else:
+            return {'error': '401 Resource not found'}, 401
 
 api.add_resource(CheckSession, '/checksession')
 
@@ -184,5 +185,13 @@ class CreateTransaction(Resource):
             return {'message': 'Transaction successful'}, 200
         
 api.add_resource(CreateTransaction, '/transaction')
+
+class ReviewList(Resource):
+    def get(self):
+        get_reviews = [review.serialize() for review in Reviews.query.all()]
+        response = make_response(jsonify(get_reviews), 200)
+        return response
+api.add_resource(ReviewList, '/reviews')
+
 if __name__ == '__main__':
     app.run(port=5555, debug=True)

@@ -25,9 +25,8 @@ function Register() {
     })
 
     .then (res=>{
-      setSubmit('success')
+      // setSubmit('success')
       // console.log(res.data)
-     
       navigate('/login')
     })
     .catch(err=>{
