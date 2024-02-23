@@ -1,6 +1,6 @@
 #app
 
-from models import User,Account,Transaction,db,Reviews
+from models import User,Account,Transaction,db,Reviews, Contact
 from flask_migrate import Migrate
 from flask import Flask,make_response,jsonify,request,session
 from flask_cors import CORS
@@ -72,12 +72,6 @@ class Login(Resource):
       if not user:
         return {'error': '401 Unauthorized'}, 401 
       else:
-            # check password matches hash stored in database.
-            # if password matches, return user object. Otherwise, return 401 Unauthorized.
-            # check_password_hash(hashed_password, password)
-            # hashed_password = user.hashed_password
-            # password = data['password']
-       
             if bcrypt.check_password_hash(user.hashed_password,data['password']):
                 session['user_id'] = user.id
                 response = make_response(jsonify(user.serialize()), 200)
@@ -192,6 +186,22 @@ class ReviewList(Resource):
         response = make_response(jsonify(get_reviews), 200)
         return response
 api.add_resource(ReviewList, '/reviews')
+
+class ContactList(Resource):
+    def post(self):
+        data = request.get_json()
+        full_name = data['full_name']
+        email = data['email']
+        message = data['message']
+
+        new_contact = Contact(full_name=full_name, email=email, message=message)
+        db.session.add(new_contact)
+        db.session.commit()
+
+        response = make_response(jsonify(new_contact.serialize()), 200)
+        return response
+    
+api.add_resource(ContactList, '/contact')
 
 if __name__ == '__main__':
     app.run(port=5555, debug=True)

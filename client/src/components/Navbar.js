@@ -5,7 +5,7 @@ function Navbar() {
   return (
     <div className="bg-white text-black  sticky top-0 z-50  ">
     <nav className="container mx-auto flex items-center justify-between py-4">
-      <Link to="/" className="text-2xl font-bold">
+      <Link to="/" className="text-2xl font-bold text-lime-950">
         {/* <img src={'} alt="logo" className='w-10 h-10 rounded-full mx-auto' /> */}
         EverGreen Bank
       </Link>
@@ -24,7 +24,7 @@ function Navbar() {
         </Link>
       </div>
       <div>
-        <Link to="/login" className="px-4 py-2 bg-customColor text-white rounded-md hover:bg-gray-700">
+        <Link to="/login" className="px-4 py-2 bg-lime-950 text-white rounded-md hover:bg-gray-700">
           Login
         </Link>
       </div>

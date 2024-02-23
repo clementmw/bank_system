@@ -8,19 +8,7 @@ function Contact() {
     const [message, setMessage] = useState('')
     const [submit, setSubmit] = useState(null)
     
-    useEffect(()=>{
-        //fetch contact
-        axios.get("/contact")
-        .then(res => {
-            setContact(res.data)
-        
-        })
-        .catch(error =>{
-            console.log("error",error)
-        })
-     
-    },[])
-    console.log(contact)
+  
     const handleSubmit = async (e) =>{ 
         e.preventDefault();
 
@@ -50,7 +38,7 @@ function Contact() {
         {submit === 'error' && (
           <div className='text-red-600 mb-4'>Please confirm your message.</div>
         )}
-         <h1 className='text-3xl font-bold mb-4 text-coffeeColor'>CONTACT US</h1>
+         <h1 className='text-3xl font-bold mb-4 text-lime-900'>CONTACT US</h1>
         <div className="mb-4">
           <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="full_name">
             Full Name

@@ -105,5 +105,28 @@ class Reviews(db.Model,SerializerMixin):
             'customer_name': self.customer_name,
             'review': self.review
         }
+class Contact(db.Model,SerializerMixin):
+    __tablename__ = 'contacts'
+    id = db.Column(db.Integer, primary_key = True)
+    full_name = db.Column(db.String)
+    email = db.Column(db.String)
+    message = db.Column(db.String)
 
+    # validate email 
+    @validates('email')
+    def validate_email(self, key, email):
+        email_pattern = r'^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$'
+        
+        if not re.match(email_pattern, email):
+            raise ValueError('Invalid email format')
+        
+        return email
+    #serialize
+    def serialize(self):
+        return{
+            'id':self.id,
+            'full_name': self.full_name,
+            'email': self.email,
+            'message': self.message,
+        }
 
