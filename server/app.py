@@ -12,6 +12,7 @@ app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///bank.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.json.compact = False
+app.secret_key = b'\xb2\xd3B\xb9 \xab\xc0By\x13\x10\x84\xb7M!\x11'
 
 db.init_app(app)
 migrate = Migrate(app,db)
@@ -20,13 +21,12 @@ bcrypt = Bcrypt(app)
 CORS(app) #connect frontend 
 
 
-class GetUser(Resource):
+class Signup(Resource):
     def get(self):
         user = [x.serialize() for x in User.query.all()]
         response = make_response(jsonify(user), 200)
         return response
-          
-    
+
     def post(self):
         data = request.get_json()
         username = data['username']
@@ -45,26 +45,48 @@ class GetUser(Resource):
             newuser = User(username=username,phone=phone,email=email,address=address,hashed_password=password)
             db.session.add(newuser)
             db.session.commit()
+
+            session['user_id'] = newuser.id # sets a new cookie for our application
         
             response = make_response(jsonify(newuser.serialize()), 200)
             return response        
 
-api.add_resource(GetUser , '/user')
+api.add_resource(Signup , '/signup')
 
-class GetUserById(Resource):
-    def get(self, id):
-        user = User.query.get(id)
-        response = make_response(jsonify(user.serialize()), 200)
-        return response
-      # data = request.get_json()
-        # username = data['username']
-        # user = User.query.filter_by(username = username).first()
-        # if user:
-        #     if bcrypt.check_password_hash(user.hashed_password,data['password']):
-        #         session['user_id'] = user.id
-        #         return {'message':'login successful'},200   
-api.add_resource(GetUserById, '/user/<int:id>')
+class Login(Resource):
+    def post(self):
+      data = request.get_json()
+      username = data['username']
+      user = User.query.filter_by(username = username).first()
+      if user:
+            if bcrypt.check_password_hash(user.hashed_password,data['password']):
+                session['user_id'] = user.id
+                response = make_response(jsonify(user.serialize()), 200)
+                return response
+            else:
+                return {'error': '401 Unauthorized'}, 401
 
+               
+api.add_resource(Login, '/login')
+
+class CheckSession(Resource):
+    def get(self):
+        if session.get('user_id'):
+            user = User.query.filter(User.id == session['user_id']).first()
+            return user.serialize(), 200
+        return {'error': '401 Resource not found'}, 401
+
+api.add_resource(CheckSession, '/checksession')
+
+class Logout(Resource):
+    def delete(self):
+        if session.get('user_id'):
+            session['user_id'] = None
+            return {}, 204
+        else:
+            return {'error': '401 Unauthorized'}, 401
+        
+api.add_resource(Logout, '/logout')
 
 class CreateAccount(Resource):
     def post(self):
