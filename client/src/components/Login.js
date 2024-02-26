@@ -16,12 +16,15 @@ function Login() {
 const handlesubmit = (e)=> {
   e.preventDefault()
 
-  axios.post("/login",{username,password})
+  axios.post("/auth/login",{username,password})
   .then(res =>{
     alert('login success! welcome ')
     console.log(res.data)
     // setSubmit('success')
-    navigate('/');
+
+    // store the jwt token in local storage
+    localStorage.setItem('access_token', res.data.tokens.access)
+    navigate('/user');
 
   })
 

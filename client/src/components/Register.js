@@ -16,7 +16,7 @@ function Register() {
   const handleSubmit= (e)=>{
     e.preventDefault();
 
-    axios.post('signup',{
+    axios.post('/auth/register',{
       username,
       phone,
       email,
@@ -58,6 +58,7 @@ function Register() {
             value={username}
             onChange={e => setUsername(e.target.value)}
             className="mt-1 p-2 w-full border rounded"
+            required
           />  
         </label>
         </div>
