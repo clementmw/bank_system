@@ -9,6 +9,7 @@ from flask_bcrypt import Bcrypt
 from werkzeug.exceptions import NotFound
 from auth import auth_bp
 from users import user_bp
+import random
 
 
 
@@ -74,60 +75,54 @@ class CreateAccount(Resource):
         response = make_response(jsonify(account.serialize()), 200)
         return response
 
-    
+    @jwt_required()
     def post(self):
         data = request.get_json()
-        account_type = data['account_type']
-        account_number = data['account_number'] 
-        balance = data['balance']
-        user_id = data['user_id']
+        current_user = get_jwt_identity()
+        user = User.query.filter_by(username=current_user).first()
+        if not user:
+            return {'message': 'User not found'}, 404
+        else:
+            account_number = ''.join(str(random.randint(0, 9)) for _ in range(10))
+            account_type = data['account_type']
+            balance = data['balance']
+            
+            newaccount = Account(account_type=account_type,account_number=account_number, balance=balance,user_id=user.id)
+            db.session.add(newaccount)
+            db.session.commit()
 
-        newaccount = Account(account_type=account_type,account_number=account_number, balance=balance, user_id=user_id)
-        db.session.add(newaccount)
-        db.session.commit()
-
-        response = make_response(jsonify(newaccount.serialize()), 200)
-        return response
-    
+            response = make_response(jsonify(newaccount.serialize()), 200)
+            return response
+    @jwt_required()
+    def patch(self):
+        current_user = get_jwt_identity()
+        user = User.query.filter_by(username=current_user).first()
+        if not user:
+            return {'message': 'User not found'}, 404
+        else:
+            account = Account.query.filter_by(user_id=user.id).first()
+            if not account:
+                return {'message': 'Account not found for the specified user'}, 404
+            else:
+                data = request.get_json()
+                account_type = data['account_type']
+                account.account_type = account_type
+                db.session.commit()
+                response = make_response(jsonify(account.serialize()), 200)
+                return response
+        
+        
 api.add_resource(CreateAccount, '/account')
 
-class GetAccount(Resource):
-    @jwt_required
-    def get(self,id):
-        current_user = get_jwt_identity()
-        account = Account.query.filter_by(username=current_user,id=id).first()
-        
-        if not account:
-            return {'message': 'Account not found for the specified user'}, 404
 
-        response = make_response(jsonify(account.serialize()), 200)
-        return response
-      
-    
-    def patch(self, id):
-        data = request.get_json()
-        new_balance = data.get('balance')
-
-        account = Account.query.get(id)
-        if not account:
-            return {'message': 'Account not found for the specified user'}, 404
-
-        account.balance = new_balance
-        db.session.commit()
-
-        response = make_response(jsonify(account.serialize()), 200)
-        return response
-    
-api.add_resource(GetAccount, '/account/<int:id>')
-
-class TransactionsbyId (Resource):
-    @jwt_required
-    def get(self, id):
-       get_trasaction = Transaction.query.get(id)
-       response = make_response(jsonify(get_trasaction.serialize()),200)
-       return response
+# class Transaction (Resource):
+#     @jwt_required
+#     def get(self, id):
+#        get_trasaction = Transaction.query.get(id)
+#        response = make_response(jsonify(get_trasaction.serialize()),200)
+#        return response
   
-api.add_resource(TransactionsbyId, '/transaction/<int:id>')
+# api.add_resource(TransactionsbyId, '/transaction/<int:id>')
 
 class CreateTransaction(Resource):
      @jwt_required
