@@ -27,6 +27,9 @@ function Navbar() {
         <Link to="/login" className="px-4 py-2 bg-lime-950 text-white rounded-md hover:bg-gray-700">
           Login
         </Link>
+        {/* <Link to="/logout" className="px-4 py-2 bg-red-800 text-white rounded-md hover:bg-gray-700">
+          Logout
+        </Link> */}
       </div>
     </nav>
   </div>

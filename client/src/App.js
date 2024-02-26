@@ -8,6 +8,9 @@ import Navbar from './components/Navbar';
 import Contact from './pages/Contact';
 import About from './pages/About';
 import User from './components/User';
+import Transaction from './components/Transaction';
+
+
 
 function App() {
   return (
@@ -21,6 +24,7 @@ function App() {
         <Route path = '/contact' element={<Contact/>}/>
         <Route path = '/about' element={<About/>}/>
         <Route path='/user' element = {<User/>}/>
+        <Route path='/transaction' element = {<Transaction/>}/>
 
 
 

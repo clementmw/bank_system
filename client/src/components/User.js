@@ -4,7 +4,6 @@ import axios from 'axios';
 function User() {
   const [userData, setUserData] = useState(null);
   const [accountData, setAccountData] = useState(null);
-  const [transactionData, setTransactionData] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -32,13 +31,9 @@ function User() {
         setLoading(false);
 
         // fetch transaction details for the user
-     const transactionDetails = await axios.get("/transaction",{
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
+ 
 
-    setTransactionData(transactionDetails.data);
+   
 
 
       } catch (error) {
@@ -71,19 +66,14 @@ function User() {
           ) : (
             <p>No account data available</p>
           )}
-          <h2 className="text-2xl font-bold mt-4">Transaction History</h2>
-              {transactionData ? (
-                  transactionData.map((transaction) => (
-                    <div key={transaction.id}>
-                      <p>Transaction ID: {transaction.id}</p>
-                      <p>Transaction Type: {transaction.transaction_type}</p>
-                      <p>Amount: {transaction.amount}</p>
-                      <p>Date: {transaction.created_at}</p>
-                    </div>
-                  ))
-                ) : (
-                  <p>No transactions found.</p>
-                )}
+          <div>
+            <p className="text-gray-600">
+              <a href="/transaction" className="text-blue-500 hover:underline">
+              Get your transaction History
+              </a>
+            </p>
+          </div>
+          
 
      
             
