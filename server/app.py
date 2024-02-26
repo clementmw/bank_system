@@ -110,51 +110,75 @@ class CreateAccount(Resource):
                 db.session.commit()
                 response = make_response(jsonify(account.serialize()), 200)
                 return response
-        
-        
+              
 api.add_resource(CreateAccount, '/account')
 
 
-# class Transaction (Resource):
-#     @jwt_required
-#     def get(self, id):
-#        get_trasaction = Transaction.query.get(id)
-#        response = make_response(jsonify(get_trasaction.serialize()),200)
-#        return response
+class GetTransaction (Resource):
+    @jwt_required()
+    def get(self):
+       current_user = get_jwt_identity()
+       user = User.query.filter_by(username=current_user).first()  
+       if not user:
+           return {'message': 'user cannot be found '}, 404
+       
+       transactions = Transaction.query.filter_by(user_id=user.id).all()
+       if not transactions:
+        return {'message': 'No transaction found for this user'}, 404
+       else:
+        transaction = [t.serialize() for t in transactions]
+        response = make_response(jsonify(transaction), 200)
+        return response
+      
   
-# api.add_resource(TransactionsbyId, '/transaction/<int:id>')
-
-class CreateTransaction(Resource):
-     @jwt_required
-     def post(self):
+    @jwt_required()
+    def post(self):
         data = request.get_json()
+        current_user = get_jwt_identity()
         amount = data.get('amount')
-        user_id = data.get('user_id')
-        account_id = data.get('account_id')
+        transaction_type = data.get('transaction_type')
 
-        user = User.query.get(user_id)
-        account = Account.query.get(account_id)
+        user = User.query.filter_by(username=current_user).first()
 
-        if not user or not account:
-            return {'message': 'User or Account not found'}, 404
+        if not user:
+            return {'message': 'User not found'}, 404
 
-        if amount is None or amount <= 50:
-            return {'message': 'Cannot transact below this amount'}, 400
+        account = Account.query.filter_by(user_id=user.id).first()
 
-        if amount > account.balance:
-            return {'message': 'Insufficient funds for withdrawal'}, 400
-        else:
-            #withdrawal decreases the account balance
+        if not account:
+            return {'message': 'Account not found for the specified user'}, 404
+
+        
+        if transaction_type not in ('withdraw', 'deposit'):
+            return {'message': 'Invalid transaction type'}, 400
+    
+        # Check if the withdrawal amount exceeds the account balance
+        if transaction_type == 'withdraw' and amount >= account.balance:
+            return {'message': 'Insufficient funds, you cannot empty account'}, 400
+
+
+        if transaction_type == 'withdraw':
             account.balance -= amount
+        elif transaction_type == 'deposit':
+            account.balance += amount
 
             # Create a new transaction record
-            new_transaction = Transaction(amount=amount, user_id=user_id, account_id=account_id)
-            db.session.add(new_transaction)
+        new_transaction = Transaction(amount=amount,transaction_type = transaction_type, user_id=user.id, account_id=account.id)
+        db.session.add(new_transaction)
+        db.session.commit()
 
-            db.session.commit()
-            return {'message': 'Transaction successful'}, 200
+        response_data = {
+            "transaction":new_transaction.serialize(),
+            "balance":account.balance
+            
+        }
+        response = make_response(jsonify(response_data), 200)
+        return response
+
+      
+
         
-api.add_resource(CreateTransaction, '/transaction')
+api.add_resource(GetTransaction, '/transaction')
 
 class ReviewList(Resource):
     def get(self):

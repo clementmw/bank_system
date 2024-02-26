@@ -82,16 +82,20 @@ class Transaction(db.Model,SerializerMixin):
     # relationship to user and account
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     account_id = db.Column(db.Integer, db.ForeignKey('accounts.id'))
+    transaction_type = db.Column(db.String)
     created_at = db.Column(db.DateTime,server_default=db.func.now())
     updated_at = db.Column(db.DateTime, onupdate=db.func.now())
 
     def serialize(self):
-        return {
-            'id':self.id,
-            'amount':self.amount,
-            'user_id':self.user_id,
-            'account_id':self.account_id
+        return{
+            "id":self.id,
+            "amount":self.amount,
+            "user_id":self.user_id,
+            "account_id":self.account_id,
+            "transaction_type":self.transaction_type
         }
+
+ 
 class Reviews(db.Model,SerializerMixin):
     __tablename__ = 'reviews'
 
