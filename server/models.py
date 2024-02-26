@@ -92,7 +92,8 @@ class Transaction(db.Model,SerializerMixin):
             "amount":self.amount,
             "user_id":self.user_id,
             "account_id":self.account_id,
-            "transaction_type":self.transaction_type
+            "transaction_type":self.transaction_type,
+            "updated_at":self.updated_at
         }
 
  

@@ -11,6 +11,7 @@ with app.app_context():
     User.query.delete()
     Account.query.delete()
     Transaction.query.delete()
+    Reviews.query.delete()
     # Include this code after initializing your Flask app and defining your models and routes
 
     # Create a few users
