@@ -34,6 +34,17 @@ jwt.init_app(app)
 app.register_blueprint(auth_bp, url_prefix='/auth')
 app.register_blueprint(user_bp, url_prefix='/user')
 
+#additional claims
+@jwt.additional_claims_loader
+def make_additional_claims(identity):
+    if identity == 'user1':
+        return {"is_staff": True}
+    return{"is_staff": False}
+
+         
+
+
+
 # jwt error handler
 @jwt.expired_token_loader
 def expired_token(jwt_header,jwt_data):
@@ -143,43 +154,56 @@ class GetTransaction (Resource):
         if not user:
             return {'message': 'User not found'}, 404
 
+        receiver_username = data.get('receiver_id')
+        if transaction_type == 'deposit':
+            receiver = User.query.filter_by(username=receiver_username).first()
+            if not receiver:
+                return {'message': 'Receiver not found'}, 404
+            if receiver_username == current_user:
+                return {'message': 'Cannot deposit into your own account'}, 400
+
         account = Account.query.filter_by(user_id=user.id).first()
 
         if not account:
             return {'message': 'Account not found for the specified user'}, 404
 
-        
+        if amount < 0:
+            return {'message': 'Amount must be non-negative'}, 400
+
         if transaction_type not in ('withdraw', 'deposit'):
             return {'message': 'Invalid transaction type'}, 400
-    
-        # Check if the withdrawal amount exceeds the account balance
-        if transaction_type == 'withdraw' and amount >= account.balance:
-            return {'message': 'Insufficient funds, you cannot empty account'}, 400
 
+        # Check if the withdrawal amount exceeds the account balance
+        if transaction_type == 'withdraw' and amount > account.balance:
+            return {'message': 'Insufficient funds'}, 400
 
         if transaction_type == 'withdraw':
             account.balance -= amount
         elif transaction_type == 'deposit':
-            account.balance += amount
+            account.balance -= amount
+            if account.balance <= amount:
+                return {'message': 'cannot transfer funds','error': 'check balance'}, 400
+            # Deposit into receiver's account
+            receiver_account = Account.query.filter_by(user_id=receiver.id).first()
+            if not receiver_account:
+                return {'message': 'Receiver does not have an account'}, 404
+            receiver_account.balance += amount
 
-            # Create a new transaction record
-        new_transaction = Transaction(amount=amount,transaction_type = transaction_type, user_id=user.id, account_id=account.id)
+        # Create a new transaction record
+        new_transaction = Transaction(amount=amount, transaction_type=transaction_type, receiver_id=receiver.id if transaction_type == 'deposit' else None,
+                                      user_id=user.id, account_id=account.id)
         db.session.add(new_transaction)
         db.session.commit()
 
         response_data = {
-            "transaction":new_transaction.serialize(),
-            "balance":account.balance
-            
+            "transaction": new_transaction.serialize(),
+            "balance": account.balance
         }
+
         response = make_response(jsonify(response_data), 200)
         return response
 
-      
-
-        
 api.add_resource(GetTransaction, '/transaction')
-
 class ReviewList(Resource):
     def get(self):
         get_reviews = [review.serialize() for review in Reviews.query.all()]

@@ -1,17 +1,21 @@
-from flask_jwt_extended import jwt_required, get_jwt_identity
+from flask_jwt_extended import jwt_required, get_jwt_identity,get_jwt
 from flask import Blueprint,request,make_response
 from models import User
 from flask import jsonify
 
 user_bp = Blueprint('user', __name__)
 
+#{"message":"you are not authorized to access this data"}),401
+
 @user_bp.get("/admin")
 @jwt_required()
 def get_all_users():
-    users = [user.serialize() for user in User.query.all()]
-    response = make_response(jsonify(users), 200)
-    return response
-
+    claims = get_jwt()
+    if claims.get("is_staff"):
+        users = [user.serialize() for user in User.query.all()]
+        response = make_response(jsonify(users), 200)
+        return response
+    return jsonify({"message":"you are not authorized to access this data"}),401
 
 @user_bp.get('/user_data')
 @jwt_required()

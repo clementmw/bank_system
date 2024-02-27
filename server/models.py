@@ -5,6 +5,7 @@ from sqlalchemy.orm import validates
 import re
 from flask_bcrypt import Bcrypt 
 from sqlalchemy.ext.hybrid import hybrid_property
+from datetime import datetime
 
 db = SQLAlchemy()
 bcrypt = Bcrypt()
@@ -19,7 +20,7 @@ class User(db.Model,SerializerMixin):
     hashed_password = db.Column(db.String, nullable = False)
     # relationship to account
     accounts = db.relationship('Account', backref='user')
-    transactions = db.relationship('Transaction', backref='user')
+    transactions = db.relationship('Transaction', backref='user', foreign_keys='Transaction.user_id')
     created_at = db.Column(db.DateTime,server_default=db.func.now())
     updated_at = db.Column(db.DateTime, onupdate=db.func.now())
 
@@ -62,6 +63,7 @@ class Account(db.Model,SerializerMixin):
     balance = db.Column(db.Integer)
     # relationship to user
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    # receiver_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     # relationship to transaction
     transactions = db.relationship('Transaction', backref='account')
     created_at = db.Column(db.DateTime,server_default=db.func.now())
@@ -81,6 +83,7 @@ class Transaction(db.Model,SerializerMixin):
     amount = db.Column(db.Integer)
     # relationship to user and account
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    receiver_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     account_id = db.Column(db.Integer, db.ForeignKey('accounts.id'))
     transaction_type = db.Column(db.String)
     created_at = db.Column(db.DateTime,server_default=db.func.now())
@@ -91,9 +94,11 @@ class Transaction(db.Model,SerializerMixin):
             "id":self.id,
             "amount":self.amount,
             "user_id":self.user_id,
+            "receiver_id":self.receiver_id,
             "account_id":self.account_id,
             "transaction_type":self.transaction_type,
             "updated_at":self.updated_at
+
         }
 
  
@@ -134,4 +139,10 @@ class Contact(db.Model,SerializerMixin):
             'email': self.email,
             'message': self.message,
         }
+class TokenBlocklist(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    jti = db.Column(db.String(), nullable=True)
+    created_at = db.Column(db.DateTime, nullable=False)
 
+    def __repr__ (self):
+        return f"<tokem {self.jti}>"

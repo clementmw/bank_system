@@ -1,6 +1,6 @@
 from flask import Blueprint,jsonify,request,make_response
-from models import User,bcrypt,db
-from flask_jwt_extended import create_access_token,create_refresh_token
+from models import User,bcrypt,db,TokenBlocklist
+from flask_jwt_extended import create_access_token,create_refresh_token,jwt_required,get_jwt
 
 auth_bp = Blueprint('auth', __name__)
 
@@ -49,14 +49,17 @@ def login():
                     "refresh": refresh_token
                 }
             }
+  
         ), 200
 
-#            class Logout(Resource):
-#     def delete(self):
-#         if session.get('user_id'):
-#             session['user_id'] = None
-#             return {}, 204
-#         else:
-#             return {'error': '401 Unauthorized'}, 401
-        
-# api.add_resource(Logout, '/logout')
+@auth_bp.get('whoami')
+@jwt_required()
+def whoami():
+    claims = get_jwt()
+    return jsonify({"mesasge":"token","claims":claims})
+    
+# @jwt.token_in_blocklist_loader
+# def token_in_blocklist_callback(jwt_header,jwt_data):
+#     jti =jwt_data['jti']
+    
+#     token = db.session.query(TokenBlocklist).filter_by(jti=jti).first() 

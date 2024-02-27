@@ -23,7 +23,7 @@ const handlesubmit = (e)=> {
     // setSubmit('success')
 
     // store the jwt token in local storage
-    localStorage.setItem('access_token', res.data.tokens.access)
+    localStorage.setItem('access_token', res.data.tokens.access) 
     navigate('/user');
 
   })
