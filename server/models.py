@@ -142,7 +142,7 @@ class Contact(db.Model,SerializerMixin):
 class TokenBlocklist(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     jti = db.Column(db.String(), nullable=True)
-    created_at = db.Column(db.DateTime, nullable=False)
+    created_at = db.Column(db.DateTime , default=datetime.now())
 
     def __repr__ (self):
         return f"<tokem {self.jti}>"

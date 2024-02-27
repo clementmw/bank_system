@@ -1,6 +1,6 @@
 #app
 from flask_jwt_extended import JWTManager,jwt_required,get_jwt_identity
-from models import User,Account,Transaction,db,Reviews, Contact
+from models import User,Account,Transaction,db,Reviews, Contact,TokenBlocklist
 from flask_migrate import Migrate
 from flask import Flask,make_response,jsonify,request,session
 from flask_cors import CORS
@@ -63,6 +63,14 @@ def missing_token(error):
 def handle_not_found(e):
     response= make_response("NotFound: The requested resource not found", 404)
     return response
+
+@jwt.token_in_blocklist_loader #check if the jwt is revocked
+def token_in_blocklist(jwt_header,jwt_data):
+    jti = jwt_data['jti']
+
+    token = db.session.query(TokenBlocklist).filter(TokenBlocklist.jti == jti).scalar()
+# if token is none : it will return false 
+    return token is not None
 
 @app.route('/')
 def index():

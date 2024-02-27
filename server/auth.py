@@ -1,6 +1,7 @@
 from flask import Blueprint,jsonify,request,make_response
 from models import User,bcrypt,db,TokenBlocklist
-from flask_jwt_extended import create_access_token,create_refresh_token,jwt_required,get_jwt
+from flask_jwt_extended import create_access_token,create_refresh_token,jwt_required,get_jwt,get_jwt_identity
+from flask_jwt_extended import get_jwt_identity
 
 auth_bp = Blueprint('auth', __name__)
 
@@ -52,14 +53,31 @@ def login():
   
         ), 200
 
-@auth_bp.get('whoami')
+@auth_bp.get('/whoami')
 @jwt_required()
 def whoami():
     claims = get_jwt()
     return jsonify({"mesasge":"token","claims":claims})
+
+@auth_bp.get('/refresh')
+@jwt_required(refresh=True)
+def refresh_access():
+    identity = get_jwt_identity()
+    access_token = create_access_token(identity=identity)
+    return jsonify({"access_token":access_token})
     
-# @jwt.token_in_blocklist_loader
-# def token_in_blocklist_callback(jwt_header,jwt_data):
-#     jti =jwt_data['jti']
-    
-#     token = db.session.query(TokenBlocklist).filter_by(jti=jti).first() 
+@auth_bp.get('/logout')
+@jwt_required(verify_type=False) #false provides both access and refresh tokens
+def logout_user():
+    jwt = get_jwt()
+
+    jti = jwt['jti']
+    token_type = jwt['type']
+
+    token_blocklist = TokenBlocklist(jti=jti)
+
+    db.session.add(token_blocklist)
+    db.session.commit()
+
+    return jsonify({"message":f"{token_type} token revoked successfully"}),200
+
