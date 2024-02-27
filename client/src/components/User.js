@@ -30,8 +30,7 @@ function User() {
         setAccountData(accountResponse.data);
         setLoading(false);
 
-        // fetch transaction details for the user
- 
+       
 
    
 
@@ -45,6 +44,25 @@ function User() {
 
     fetchUserData();
   }, []);
+
+  const handleLogout = ()=> {
+    const token = localStorage.getItem('access_token');
+     // logout for the user
+     axios.get('/auth/logout', {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then(() => {
+        console.log('Logged out successfully');
+        localStorage.removeItem('access_token');
+        window.location.href = '/login'; // Redirect to the login page after logout
+      })
+      .catch((error) => {
+        alert("failed to logout")
+      })
+
+  }
 
   return (
     <div className="mt-10">
@@ -73,6 +91,10 @@ function User() {
               </a>
             </p>
           </div>
+          <div>
+            <button onClick={handleLogout}  >logout</button>
+          </div>
+         
           
 
      

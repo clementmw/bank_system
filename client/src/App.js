@@ -9,13 +9,17 @@ import Contact from './pages/Contact';
 import About from './pages/About';
 import User from './components/User';
 import Transaction from './components/Transaction';
+import NotNavbar from './components/NotNavbar';
+import { useAuth} from './components/AuthProvider';
+
 
 
 
 function App() {
+  const {auth} = useAuth();
   return (
     <div className="App">
-      <Navbar/>
+      {auth ? <Navbar/> : <NotNavbar/>}
       <Routes>
         <Route path = '/' element = {<Home/>}/>
         <Route path = '/signup' element={<Register/>}/>

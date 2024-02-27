@@ -3,6 +3,7 @@ import axios from 'axios'
 import { useState} from 'react'
 import { useNavigate } from 'react-router-dom'
 import backgroundimage from '../images/login.jpg'
+import { useAuth} from './AuthProvider'
 
 
 
@@ -12,7 +13,7 @@ function Login() {
   const [submit, setSubmit] = useState(null);
 
   const navigate = useNavigate()
-
+  const { setAuth } = useAuth();
 const handlesubmit = (e)=> {
   e.preventDefault()
 
@@ -24,6 +25,7 @@ const handlesubmit = (e)=> {
 
     // store the jwt token in local storage
     localStorage.setItem('access_token', res.data.tokens.access) 
+    setAuth(true);
     navigate('/user');
 
   })
