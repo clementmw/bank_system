@@ -32,13 +32,14 @@ function LoginNavbar() {
   return (
     <div className="bg-white text-black  sticky top-0 z-50  ">
     <nav className="container mx-auto flex items-center justify-between py-4">
-      <Link to="#" className="text-2xl font-bold text-lime-950">
+      <Link to="/user" className="text-2xl font-bold text-lime-950">
         {/* <img src={'} alt="logo" className='w-10 h-10 rounded-full mx-auto' /> */}
         EverGreen Bank
       </Link>
       <div>
-      <Link to="/transaction">Transactions  </Link>
       <Link to="/transfer">Transfer funds </Link>
+      <Link to="/transaction">Transaction History  </Link>
+     
       </div>
       <div>
       <button onClick={handleLogout} className="px-4 py-2 bg-red-800 text-white rounded-md hover:bg-gray-700">
