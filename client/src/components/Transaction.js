@@ -2,8 +2,9 @@ import React, { useEffect ,useState} from 'react'
 import axios from 'axios';
 
 function Transaction() {
-  const [transactionData, setTransactionData] = useState(null);
 
+  const [transactionData, setTransactionData] = useState(null);
+  
   useEffect (()=>{
     const fetchUserData = async () => {
       try {
@@ -13,6 +14,7 @@ function Transaction() {
         Authorization: `Bearer ${token}`,
       },
     });
+  
 
     setTransactionData(transactionDetails.data);
 

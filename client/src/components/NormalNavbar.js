@@ -2,7 +2,7 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 
 
-function NotNavbar() {
+function NormalNavbar() {
   return (
     <div className="bg-white text-black  sticky top-0 z-50  ">
     <nav className="container mx-auto flex items-center justify-between py-4">
@@ -35,4 +35,4 @@ function NotNavbar() {
   )
 }
 
-export default NotNavbar
+export default NormalNavbar

@@ -4,7 +4,7 @@ import { useAuth } from './AuthProvider';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
-function Navbar() {
+function LoginNavbar() {
   const { setAuth,} = useAuth();
   const navigate = useNavigate();
 
@@ -37,6 +37,10 @@ function Navbar() {
         EverGreen Bank
       </Link>
       <div>
+      <Link to="/transaction">Transactions  </Link>
+      <Link to="/transfer">Transfer funds </Link>
+      </div>
+      <div>
       <button onClick={handleLogout} className="px-4 py-2 bg-red-800 text-white rounded-md hover:bg-gray-700">
         Logout
       </button>
@@ -46,4 +50,4 @@ function Navbar() {
   )
 }
 
-export default Navbar
+export default LoginNavbar
