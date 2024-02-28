@@ -97,7 +97,7 @@ class Transaction(db.Model,SerializerMixin):
             "receiver_id":self.receiver_id,
             "account_id":self.account_id,
             "transaction_type":self.transaction_type,
-            "updated_at":self.updated_at
+            "created_at":self.created_at
 
         }
 

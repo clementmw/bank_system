@@ -37,8 +37,8 @@ function LoginNavbar() {
         EverGreen Bank
       </Link>
       <div>
-      <Link to="/transfer">Transfer funds </Link>
-      <Link to="/transaction">Transaction History  </Link>
+      <Link to="/transfer">Transfer_Funds </Link>
+      <Link to="/transaction">History  </Link>
      
       </div>
       <div>

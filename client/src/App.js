@@ -20,7 +20,7 @@ function App() {
   const {auth} = useAuth();
   return (
     <div className="App">
-      {auth ? <LoginNavbar/> : <NormalNavbar/>}
+     {auth ? <LoginNavbar/> : <NormalNavbar/>}
       <Routes>
         <Route path = '/' element = {<Home/>}/>
         <Route path = '/signup' element={<Register/>}/>
@@ -31,8 +31,6 @@ function App() {
         <Route path='/user' element = {<User/>}/>
         <Route path='/transaction' element = {<Transaction/>}/>
         <Route path = '/transfer' element = {<TransactionForm/>}/>
-
-
 
       </Routes>
     </div>

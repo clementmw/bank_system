@@ -174,8 +174,12 @@ class GetTransaction (Resource):
 
         if not account:
             return {'message': 'Account not found for the specified user'}, 404
+        try:
+            amount = int(amount)
+        except ValueError:
+            return {'message': 'Amount must be a valid integer'}, 400
 
-        if amount < 0:
+        if amount < int(0):
             return {'message': 'Amount must be non-negative'}, 400
 
         if transaction_type not in ('withdraw', 'deposit'):
