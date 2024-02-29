@@ -98,6 +98,7 @@ class CreateAccount(Resource):
     def post(self):
         data = request.get_json()
         current_user = get_jwt_identity()
+     
         user = User.query.filter_by(username=current_user).first()
         if not user:
             return {'message': 'User not found'}, 404
@@ -169,8 +170,12 @@ class GetTransaction (Resource):
                 return {'message': 'Receiver not found'}, 404
             if receiver_username == current_user:
                 return {'message': 'Cannot deposit into your own account'}, 400
+        
+        account_number = data.get('account_number')
+        if not account_number:
+            return {'message': 'Account number is required for withdrawal'}, 400
 
-        account = Account.query.filter_by(user_id=user.id).first()
+        account = Account.query.filter_by(account_number = account_number ,user_id=user.id).first()
 
         if not account:
             return {'message': 'Account not found for the specified user'}, 404

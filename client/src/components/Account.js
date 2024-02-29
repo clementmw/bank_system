@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 function Account() {
   const [account_type, setAccountType] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
 //   const [balance,setBalance] = useState('')
-
+  const navigate = useNavigate();
   const handleSubmit = (e) => {
     e.preventDefault();
 
@@ -29,10 +30,9 @@ function Account() {
     axios.post('/account', { account_type}, config)
       .then((res) => {
         console.log(res.data);
-        setSuccessMessage('Account created successfully!');
+        alert('Account created successfully!');
         setErrorMessage('');
-        // Optionally, clear the form fields
-        setAccountType('');
+        navigate('/user')
       })
       .catch((err) => {
         console.error(err);

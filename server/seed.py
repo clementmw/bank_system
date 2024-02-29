@@ -24,20 +24,20 @@ with app.app_context():
     db.session.commit()
 
     # Create accounts for the users
-    # account1 = Account(account_type='Savings',account_number = 20930202, balance=100000, user_id=user1.id,)
+    account1 = Account(account_type='Savings',account_number = 20930202, balance=100000, user_id=user1.id,)
     account2 = Account(account_type='Checking',account_number = 390104242, balance=50000,user_id=user2.id,)
 
     # Add accounts to the database
-    # db.session.add(account1)
+    db.session.add(account1)
     db.session.add(account2)
     db.session.commit()
 
     # Create transactions for the accounts
-    # transaction1 = Transaction(amount=200, user_id=user1.id, account_id=account1.id, transaction_type='deposit', receiver_id=user2.id, created_at=datetime.utcnow())
+    transaction1 = Transaction(amount=200, user_id=user1.id, account_id=account1.id, transaction_type='deposit', receiver_id=user2.id, created_at=datetime.utcnow())
     transaction2 = Transaction(amount=50, user_id=user2.id, account_id=account2.id, transaction_type='withdraw' ,receiver_id=user1.id,created_at=datetime.utcnow())
 
     # Add transactions to the database
-    # db.session.add(transaction1)
+    db.session.add(transaction1)
     db.session.add(transaction2)
     db.session.commit()
 

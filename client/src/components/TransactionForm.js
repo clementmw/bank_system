@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 
 function TransactionForm({balance,current_user,userData}) {
@@ -7,12 +7,39 @@ function TransactionForm({balance,current_user,userData}) {
     const [receiver_id,setReceiver] = useState('')
     const [successMessage, setSuccessMessage] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
+    const [data, setAccount] = useState([]);
+    const [account_number, setAccountNumber] = useState('')
 
+useEffect(()=> {
 
+  const accessToken = localStorage.getItem('access_token');
+
+  // Check if the access token is present
+  if (!accessToken) {
+    console.error('Access token not found');
+    return;
+  }
+
+  // Add authorization header to the Axios request
+  const config = {
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+  };
+  axios.get('/account',config) 
+  .then((res)=> {
+    setAccount(res.data)
+    console.log(res.data)
+  })
+  .catch((err)=>{
+    console.log(err)
+  })
+
+},[])
 
   const handleSubmit = (e) => {
   e.preventDefault();
-
+  
   // Fetch the access token from localStorage
   const accessToken = localStorage.getItem('access_token');
 
@@ -28,9 +55,22 @@ function TransactionForm({balance,current_user,userData}) {
       Authorization: `Bearer ${accessToken}`,
     },
   };
-  // get account info
-  
-  axios.post('/transaction', { amount, transaction_type, receiver_id }, config)
+
+  if (!account_number) {
+    setErrorMessage('Please enter the account number.');
+    return;
+  }
+
+  // Find the account based on the entered accountNumber
+  const selectedAccount = data.find((account) => account.account_number === parseInt(account_number))
+
+  if (!selectedAccount) {
+    console.log('Account not found.');
+    return;
+  }
+
+  if (selectedAccount) {
+  axios.post('/transaction', { amount, transaction_type, receiver_id ,account_number: selectedAccount.account_number,}, config)
   .then((res) => {
     setSuccessMessage(`Transaction successful! ${getSuccessMessage(transaction_type, receiver_id, amount)}`);
     setErrorMessage('');
@@ -43,6 +83,8 @@ function TransactionForm({balance,current_user,userData}) {
     console.error(err);
   });
 
+} 
+
 const getSuccessMessage = (transactionType, receiverId, amount) => {
   if (transactionType === 'deposit') {
     return `You have deposited ksh${amount} to ${receiverId}.`;
@@ -53,9 +95,6 @@ const getSuccessMessage = (transactionType, receiverId, amount) => {
 };
 
 const getErrorMessage = (transactionType, amount,balance,receiver_id,current_user) => {
-  // if (transactionType === 'deposit' && receiver_id !== userData ) {
-  //   return `Please enter a valid receiver username`;
-  // }
 
   if (transactionType === 'deposit' && receiver_id === current_user ) {
     return `You cannot deposit in your own account`;
@@ -91,6 +130,17 @@ const getErrorMessage = (transactionType, amount,balance,receiver_id,current_use
     <div className="max-w-md mx-auto mt-8 p-4 bg-white rounded-md shadow-md">
       <h2 className="text-2xl font-semibold mb-4">Transaction Form</h2>
       <form onSubmit={handleSubmit}>
+      <div className="mb-4">
+          <label className="block text-sm font-medium text-gray-600">AccountNumber:</label>
+          <input
+            type='number'
+            value={account_number}
+            onChange={(e)=> setAccountNumber(e.target.value )}
+            className="mt-1 p-2 border rounded-md w-full"
+            placeholder='Enter your account Number'
+            required
+          />
+        </div>
         <div className="mb-4">
           <label className="block text-sm font-medium text-gray-600">Amount:</label>
           <input

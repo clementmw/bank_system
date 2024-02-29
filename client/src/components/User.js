@@ -84,22 +84,16 @@ function User() {
               <p>Account Type: {account.account_type}</p>
               <p>Account Number: {account.account_number}</p>
               <p>Account Balance: {account.balance}</p>
-              {/* Add other account details as needed */}
             </div>
           ))
         ) : (
           <p>No account data available</p>
         )}
-  
-        {/* Pass individual accounts to TransactionForm */}
-        {accountData.map(account => (
-          <TransactionForm
-            key={account.id}
-            balance={account.balance}
-            current_user={userData.username}
-            userData={userData}
-          />
-        ))}
+                <TransactionForm
+                balance = {accountData.balance}
+                current_user = {userData.username}
+                userData = {userData}
+              />
       </div>
     )}
   </div>
