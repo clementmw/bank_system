@@ -72,6 +72,9 @@ const getErrorMessage = (transactionType, amount,balance,receiver_id,current_use
   if (transactionType === 'withdraw' && amount > balance) {
     return `Insufficient balance. Please check account balance and try again`;
   }
+  if ((transactionType === 'withdraw' || transaction_type === 'deposit') && balance === 0 ){
+    return `you cannot transact`;
+  }
  }
 
     // clear form after successfull transaction 
