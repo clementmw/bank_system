@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 
-function TransactionForm() {
+function TransactionForm({balance,current_user,userData}) {
     const [amount, setAmount] = useState('');
     const [transaction_type, setTransactionType] = useState('')
     const [receiver_id,setReceiver] = useState('')
     const [successMessage, setSuccessMessage] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
+
 
 
   const handleSubmit = (e) => {
@@ -27,30 +28,51 @@ function TransactionForm() {
       Authorization: `Bearer ${accessToken}`,
     },
   };
-
+  // get account info
+  
   axios.post('/transaction', { amount, transaction_type, receiver_id }, config)
-    .then((res) => {
-      setSuccessMessage(`Transaction successful! ${getSuccessMessage(transaction_type, receiver_id, amount)}`);
-      setErrorMessage('');
-      console.log(res.data);
-      // Optionally, you can perform additional actions upon successful submission
-    })
-    .catch((err) => {
-      setSuccessMessage('');
-      setErrorMessage('Transaction failed. Please check your account balance and try again.');
-      console.error(err);
-    });
+  .then((res) => {
+    setSuccessMessage(`Transaction successful! ${getSuccessMessage(transaction_type, receiver_id, amount)}`);
+    setErrorMessage('');
+    console.log(res.data);
+    // Optionally, you can perform additional actions upon successful submission
+  })
+  .catch((err) => {
+    setSuccessMessage('');
+    setErrorMessage(`Transaction failed. ${getErrorMessage(transaction_type, amount,balance,receiver_id)}`); // Removed extra parentheses
+    console.error(err);
+  });
 
-    const getSuccessMessage = (transactionType, receiverId, amount) => {
-      if (transactionType === 'deposit') {
-        return `You have deposited ksh${amount} to ${receiverId}.`;
-      }
-      if (transactionType === 'withdraw') {
-        return `You have withdrawn ksh${amount}`;
-      }
-      
-      return '';
-    };
+const getSuccessMessage = (transactionType, receiverId, amount) => {
+  if (transactionType === 'deposit') {
+    return `You have deposited ksh${amount} to ${receiverId}.`;
+  }
+  if (transactionType === 'withdraw') {
+    return `You have withdrawn ksh${amount}`;
+  }
+};
+
+const getErrorMessage = (transactionType, amount,balance,receiver_id,current_user) => {
+  // if (transactionType === 'deposit' && receiver_id !== userData ) {
+  //   return `Please enter a valid receiver username`;
+  // }
+
+  if (transactionType === 'deposit' && receiver_id === current_user ) {
+    return `You cannot deposit in your own account`;
+  }
+  if (transactionType === 'deposit' && parseFloat(amount) === balance) {
+    return ` You cannot transfer funds.Account balance cannot be 0`;
+  }
+  
+
+  if (transactionType === 'withdraw' && parseFloat(amount) === balance) {
+    return `Insufficient balance. Please try again, account balance cannot be 0`;
+  }
+
+  if (transactionType === 'withdraw' && amount > balance) {
+    return `Insufficient balance. Please check account balance and try again`;
+  }
+ }
 
     // clear form after successfull transaction 
     setAmount('');
@@ -75,6 +97,7 @@ function TransactionForm() {
             value={amount}
             onChange={(e)=> setAmount(e.target.value )}
             className="mt-1 p-2 border rounded-md w-full"
+            required
           />
         </div>
 
@@ -86,8 +109,10 @@ function TransactionForm() {
             onChange={(e)=> setTransactionType(e.target.value)}
             className="mt-1 p-2 border rounded-md w-full"
           >
+            <option value="">Select Transaction </option>
             <option value="withdraw">Withdraw</option>
             <option value="deposit">Deposit</option>
+           
           </select>
         </div>
 
@@ -100,7 +125,9 @@ function TransactionForm() {
               value={receiver_id}
               onChange={(e) => setReceiver(e.target.value)}
               className="mt-1 p-2 border rounded-md w-full"
+              required
             />
+
           </div>
         )}
 

@@ -9,18 +9,20 @@ import Contact from './pages/Contact';
 import About from './pages/About';
 import User from './components/User';
 import Transaction from './components/Transaction';
-import NormalNavbar from './components/NormalNavbar';
-import { useAuth} from './components/AuthProvider';
+// import NormalNavbar from './components/NormalNavbar';
+// import { useAuth} from './components/AuthProvider';
 import TransactionForm from './components/TransactionForm';
+import Account from './components/Account';
 
 
 
 
 function App() {
-  const {auth} = useAuth();
+  // const {auth} = useAuth();
   return (
     <div className="App">
-     {auth ? <LoginNavbar/> : <NormalNavbar/>}
+     {/* {auth ? <LoginNavbar/> : <NormalNavbar/>} */}
+     <LoginNavbar/>
       <Routes>
         <Route path = '/' element = {<Home/>}/>
         <Route path = '/signup' element={<Register/>}/>
@@ -31,6 +33,7 @@ function App() {
         <Route path='/user' element = {<User/>}/>
         <Route path='/transaction' element = {<Transaction/>}/>
         <Route path = '/transfer' element = {<TransactionForm/>}/>
+        <Route path = '/newaccount' element = {<Account/>}/>
 
       </Routes>
     </div>

@@ -86,12 +86,12 @@ class CreateAccount(Resource):
         if not user:
             return {'message': 'User not found'}, 404
 
-        account = Account.query.filter_by(user_id=user.id).first()
-
+        accounts = Account.query.filter(Account.user_id == user.id).all()
+        account = [a.serialize() for a in accounts]
         if not account:
             return {'message': 'Account not found for the specified user'}, 404
 
-        response = make_response(jsonify(account.serialize()), 200)
+        response = make_response(jsonify(account), 200)
         return response
 
     @jwt_required()
@@ -104,9 +104,9 @@ class CreateAccount(Resource):
         else:
             account_number = ''.join(str(random.randint(0, 9)) for _ in range(10))
             account_type = data['account_type']
-            balance = data['balance']
+            balance = data.get('balance', 1000)
             
-            newaccount = Account(account_type=account_type,account_number=account_number, balance=balance,user_id=user.id)
+            newaccount = Account(account_type=account_type,account_number=account_number,balance=balance,user_id=user.id)
             db.session.add(newaccount)
             db.session.commit()
 
@@ -174,6 +174,7 @@ class GetTransaction (Resource):
 
         if not account:
             return {'message': 'Account not found for the specified user'}, 404
+        
         try:
             amount = int(amount)
         except ValueError:
@@ -181,6 +182,11 @@ class GetTransaction (Resource):
 
         if amount < int(0):
             return {'message': 'Amount must be non-negative'}, 400
+        
+        # Check if the withdrawal amount is equal to the account balance
+        if transaction_type == 'withdraw' and amount == account.balance:
+            return {'message': 'Cannot withdraw an amount equal to the account balance'}, 400
+
 
         if transaction_type not in ('withdraw', 'deposit'):
             return {'message': 'Invalid transaction type'}, 400
@@ -188,6 +194,9 @@ class GetTransaction (Resource):
         # Check if the withdrawal amount exceeds the account balance
         if transaction_type == 'withdraw' and amount > account.balance:
             return {'message': 'Insufficient funds'}, 400
+        # check is amount 
+        if transaction_type == 'deposit' and amount == account.balance:
+            return {'message': 'Cannot deposit an amount equal to the account balance'}, 400
 
         if transaction_type == 'withdraw':
             account.balance -= amount
