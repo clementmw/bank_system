@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-// import { useAuth } from './AuthProvider';
 import TransactionForm from './TransactionForm';
 
 function User() {
@@ -8,7 +7,6 @@ function User() {
   const [accountData, setAccountData] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // const { auth } = useAuth();
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -64,40 +62,62 @@ function User() {
   // };
 
   return (
-    <div className="mt-10">
-    <h1 className="text-3xl font-bold mb-4">Hello: {userData ? userData.username : 'User'}</h1>
-  
-    {loading ? (
-      <p>Loading user and account data...</p>
-    ) : (
-      <div>
-        <p>Email: {userData.email}</p>
-        <div className="mt-4">
+    <div className="container mx-auto p-4">
+  <h1 className="text-3xl font-bold mb-4">
+    Hello: {userData ? userData.username .toUpperCase() : 'User'}
+  </h1>
+
+  {loading ? (
+    <p>Loading user and account data...</p>
+  ) : (
+    <div className="flex flex-col mt-10 md:flex-row">
+
+       <div className="md:w-1/2 pr-4">
           <a href="/newaccount" className="text-blue-500 hover:underline">
             Create a New account
           </a>
-        </div>
-  
-        <h2 className="text-2xl font-bold mt-4">Account Information</h2>
+        
+        <h2 className="text-2xl font-bold mb-4">Account Information</h2>
         {accountData.length > 0 ? (
           accountData.map(account => (
-            <div key={account.id} className="mt-4">
-              <p>Account Type: {account.account_type}</p>
-              <p>Account Number: {account.account_number}</p>
-              <p>Account Balance: {account.balance}</p>
+            <div key={account.id} className="mb-6 border rounded p-4 shadow-md bg-slate-200">
+            <h3 className="text-lg font-bold mb-2 text-gray-800">Account Details</h3>
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <p className="text-sm text-gray-600 uppercase">Account Type</p>
+                <p className="text-lg font-semibold">{account.account_type}</p>
+              </div>
+              <div>
+                <p className="text-sm text-gray-600 uppercase">Account Number</p>
+                <p className="text-lg font-semibold">{account.account_number}</p>
+              </div>
+              <div>
+                <p className="text-sm text-gray-600 uppercase">Account Balance</p>
+                <p className="text-lg font-semibold">{account.balance}</p>
+              </div>
             </div>
+          </div>
+          
           ))
         ) : (
           <p>No account data available</p>
         )}
-                <TransactionForm
-                balance = {accountData.balance}
-                current_user = {userData.username}
-                userData = {userData}
-              />
+
       </div>
-    )}
-  </div>
+      <div className="md:w-1/2 pl-4 ">
+        <TransactionForm
+          balance={accountData.balance}
+          current_user={userData.username}
+          userData={userData}
+        />
+      </div>
+
+    </div>
+  )}
+</div>
+
+ 
+  
   
   );
 }

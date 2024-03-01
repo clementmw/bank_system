@@ -1,11 +1,9 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-import { useAuth } from './AuthProvider';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 function LoginNavbar() {
-  const { setAuth,} = useAuth();
   const navigate = useNavigate();
 
   const handleLogout = ()=> {
@@ -19,7 +17,6 @@ function LoginNavbar() {
       .then(() => {
         console.log('Logged out successfully');
         localStorage.removeItem('access_token');
-        setAuth(false);
         navigate('/login'); // Redirect to the login page after logout
       })
       .catch((error) => {

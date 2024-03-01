@@ -116,42 +116,36 @@ const getErrorMessage = (transactionType, amount,balance,receiver_id,current_use
   }
  }
 
-    // clear form after successfull transaction 
-    setAmount('');
-    setTransactionType('');
-    setReceiver('');
-    setSuccessMessage('');
-    setErrorMessage('');
 }
     
     
 
   return (
-    <div className="max-w-md mx-auto mt-8 p-4 bg-white rounded-md shadow-md">
+    <div className="max-w-md mx-auto p-4rounded-md shadow-md ">
       <h2 className="text-2xl font-semibold mb-4">Transaction Form</h2>
       <form onSubmit={handleSubmit}>
       <div className="mb-4">
-          <label className="block text-sm font-medium text-gray-600">AccountNumber:</label>
+          <label className="block text-gray-700 text-sm font-bold mb-2">AccountNumber:</label>
           <input
            type='text'
            pattern='\d*'
            inputMode='numeric'
             value={account_number}
             onChange={(e)=> setAccountNumber(e.target.value )}
-            className="mt-1 p-2 border rounded-md w-full"
+            className="mt-1 p-2 w-full border rounded"
             placeholder='Enter your account Number'
             required
           />
         </div>
         <div className="mb-4">
-          <label className="block text-sm font-medium text-gray-600">Amount:</label>
+          <label className="block text-gray-700 text-sm font-bold mb-2">Amount:</label>
           <input
             type='text'
             pattern='\d*'
             inputMode='numeric'
             value={amount}
             onChange={(e)=> setAmount(e.target.value )}
-            className="mt-1 p-2 border rounded-md w-full"
+            className="mt-1 p-2 w-full border rounded"
             required
           />
         </div>
