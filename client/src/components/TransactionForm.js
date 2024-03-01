@@ -133,7 +133,9 @@ const getErrorMessage = (transactionType, amount,balance,receiver_id,current_use
       <div className="mb-4">
           <label className="block text-sm font-medium text-gray-600">AccountNumber:</label>
           <input
-            type='number'
+           type='text'
+           pattern='\d*'
+           inputMode='numeric'
             value={account_number}
             onChange={(e)=> setAccountNumber(e.target.value )}
             className="mt-1 p-2 border rounded-md w-full"

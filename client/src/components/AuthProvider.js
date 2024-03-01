@@ -16,17 +16,12 @@ const AuthProvider = ({ children }) => {
   useEffect(() => {
     const isAuth = async () => {
       try {
-        // const token = localStorage.getItem('access_token');
         const res = await axios.get('/auth/login',  
-          { withCredentials: true ,
-            //  headers: {
-            //   Authorization: `Bearer ${token}`,
-            // },
-          
-          }
+          { withCredentials: true }
         );
       
         setUser(res.data);
+        console.log(res.data)
       } catch(error) {
         setUser(null);
       };

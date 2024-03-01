@@ -9,8 +9,8 @@ import Contact from './pages/Contact';
 import About from './pages/About';
 import User from './components/User';
 import Transaction from './components/Transaction';
-// import NormalNavbar from './components/NormalNavbar';
-// import { useAuth} from './components/AuthProvider';
+import NormalNavbar from './components/NormalNavbar';
+import { useAuth} from './components/AuthProvider';
 import TransactionForm from './components/TransactionForm';
 import Account from './components/Account';
 
@@ -18,12 +18,11 @@ import Account from './components/Account';
 
 
 function App() {
-  // const {auth} = useAuth();
+  const {auth} = useAuth();
   return (
     <div className="App">
-     {/* {auth ? <LoginNavbar/> : <NormalNavbar/>} */}
-     <LoginNavbar/>
-      <Routes>
+     {auth ? <LoginNavbar/> : <NormalNavbar/>}
+         <Routes>
         <Route path = '/' element = {<Home/>}/>
         <Route path = '/signup' element={<Register/>}/>
         <Route path= '/login' element={<Login/>}/>

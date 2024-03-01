@@ -8,7 +8,7 @@ function User() {
   const [accountData, setAccountData] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // const { auth, setAuth } = useAuth();
+  // const { auth } = useAuth();
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -19,6 +19,7 @@ function User() {
         const userResponse = await axios.get('/user/user_data', {
           headers: {
             Authorization: `Bearer ${token}`,
+            
           },
         });
 
