@@ -108,12 +108,14 @@ class Reviews(db.Model,SerializerMixin):
     id = db.Column(db.Integer, primary_key = True)
     customer_name = db.Column(db.String)
     review = db.Column(db.String)
+    rating = db.Column(db.Integer)
 
     def serialize(self):
         return {
             'id':self.id,
             'customer_name': self.customer_name,
-            'review': self.review
+            'review': self.review,
+            'rating': self.rating
         }
 class Contact(db.Model,SerializerMixin):
     __tablename__ = 'contacts'

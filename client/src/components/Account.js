@@ -14,6 +14,11 @@ function Account() {
 
   // Fetch the access token from localStorage
    const accessToken = localStorage.getItem('access_token');
+    const config = {
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+   };
 
     // Check if the access token is present
    if (!accessToken) {
@@ -21,12 +26,7 @@ function Account() {
     return;
    }
 
-   const config = {
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-    },
-   };
-
+  
     axios.post('/account', { account_type}, config)
       .then((res) => {
         console.log(res.data);

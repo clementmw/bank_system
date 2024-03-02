@@ -19,22 +19,23 @@ import { useState,useEffect} from 'react';
 
 function App() {
   const [isLoggedIn, setLoggedIn] = useState(false);
- 
+   
   useEffect(() => {
     // Check for the presence of a valid JWT token here
     const token = localStorage.getItem('access_token'); 
     if (token) {
-      // Validate the token (you might want to decode and check expiration)
-      // For simplicity, we're assuming the presence of a token means the user is logged in
+     
       setLoggedIn(true);
     } else {
       setLoggedIn(false);
     }
-  }, [isLoggedIn]); 
+  }, []); 
+  
 
   const handleLogout = () => {
-    localStorage.removeItem('access_token'); 
     setLoggedIn(false);
+    localStorage.removeItem('access_token'); 
+    
   };
 
   return (
