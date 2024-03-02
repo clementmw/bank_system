@@ -10,29 +10,49 @@ import About from './pages/About';
 import User from './components/User';
 import Transaction from './components/Transaction';
 import NormalNavbar from './components/NormalNavbar';
-import { useAuth} from './components/AuthProvider';
 import TransactionForm from './components/TransactionForm';
+import Account from './components/Account';
+import { useState,useEffect} from 'react';
 
 
 
 
 function App() {
-  const {auth} = useAuth();
+  const [isLoggedIn, setLoggedIn] = useState(false);
+   
+  useEffect(() => {
+    // Check for the presence of a valid JWT token here
+    const token = localStorage.getItem('access_token'); 
+    if (token) {
+     
+      setLoggedIn(true);
+    } else {
+      setLoggedIn(false);
+    }
+  }, []); 
+  
+
+  const handleLogout = () => {
+    setLoggedIn(false);
+    localStorage.removeItem('access_token'); 
+    
+  };
+
   return (
     <div className="App">
-      {auth ? <LoginNavbar/> : <NormalNavbar/>}
+       {isLoggedIn ? <LoginNavbar onLogout={handleLogout} /> : <NormalNavbar />}   
       <Routes>
-        <Route path = '/' element = {<Home/>}/>
+      <Route path="/" element={<Home />} /> 
         <Route path = '/signup' element={<Register/>}/>
-        <Route path= '/login' element={<Login/>}/>
+        <Route path= '/login'
+         element={<Login onLogin={() => setLoggedIn(true)} />}/>
         <Route path = '/testimonial' element={<Testimonial/>}/>
         <Route path = '/contact' element={<Contact/>}/>
         <Route path = '/about' element={<About/>}/>
         <Route path='/user' element = {<User/>}/>
         <Route path='/transaction' element = {<Transaction/>}/>
         <Route path = '/transfer' element = {<TransactionForm/>}/>
-
-
+        <Route path = '/newaccount' element = {<Account/>}/>
 
       </Routes>
     </div>

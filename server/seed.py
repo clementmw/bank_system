@@ -24,8 +24,8 @@ with app.app_context():
     db.session.commit()
 
     # Create accounts for the users
-    account1 = Account(account_type='Savings',account_number = 20930202, balance=1000, user_id=user1.id,)
-    account2 = Account(account_type='Checking',account_number = 390104242, balance=500,user_id=user2.id,)
+    account1 = Account(account_type='Savings',account_number = 20930202, balance=100000, user_id=user1.id,)
+    account2 = Account(account_type='Checking',account_number = 390104242, balance=50000,user_id=user2.id,)
 
     # Add accounts to the database
     db.session.add(account1)
@@ -42,12 +42,12 @@ with app.app_context():
     db.session.commit()
 
     reviews = [
-        {"customer_name": "John Doe", "review": "I've had a fantastic experience with this bank. The customer service is top-notch, and the staff is always helpful and friendly."},
-        {"customer_name": "Jane Smith", "review": "The online banking services provided by this bank are excellent. It's convenient, user-friendly, and secure."},
-        {"customer_name": "Robert Johnson", "review": "I appreciate the transparency of this bank. There are no hidden fees, and the account statements are clear and easy to understand."},
-        {"customer_name": "Lisa Williams", "review": "I recently applied for a loan, and the process was smooth and efficient. The bank offers competitive interest rates."},
-        {"customer_name": "Michael Brown", "review": "The mobile app is a game-changer. It allows me to manage my accounts, transfer funds, and pay bills on the go."},
-        {"customer_name": "Emily Davis", "review": "I've been a customer for years, and I trust this bank with my finances. The security measures in place give me peace of mind."}
+        {"customer_name": "John Doe", "review": "I've had a fantastic experience with this bank. The customer service is top-notch, and the staff is always helpful and friendly.","rating":5},
+        {"customer_name": "Jane Smith", "review": "The online banking services provided by this bank are excellent. It's convenient, user-friendly, and secure.","rating":4.5},
+        {"customer_name": "Robert Johnson", "review": "I appreciate the transparency of this bank. There are no hidden fees, and the account statements are clear and easy to understand.","rating":4},
+        {"customer_name": "Lisa Williams", "review": "I recently applied for a loan, and the process was smooth and efficient. The bank offers competitive interest rates.","rating":4.5},
+        {"customer_name": "Michael Brown", "review": "The mobile app is a game-changer. It allows me to manage my accounts, transfer funds, and pay bills on the go.","rating":4},
+        {"customer_name": "Emily Davis", "review": "I've been a customer for years, and I trust this bank with my finances. The security measures in place give me peace of mind.","rating":5}
        ]
     for review_data in reviews:
             new_review = Reviews(**review_data)
