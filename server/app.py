@@ -1,8 +1,10 @@
 #app
+import os
+
 from flask_jwt_extended import JWTManager,jwt_required,get_jwt_identity
 from models import User,Account,Transaction,db,Reviews, Contact,TokenBlocklist
 from flask_migrate import Migrate
-from flask import Flask,make_response,jsonify,request,session
+from flask import Flask,make_response,jsonify,request,render_template
 from flask_cors import CORS
 from flask_restful import Api,Resource
 from flask_bcrypt import Bcrypt
@@ -11,12 +13,22 @@ from auth import auth_bp
 from users import user_bp
 import random
 
+from dotenv import load_dotenv
+load_dotenv()
+
+app = Flask(
+    __name__,
+    static_url_path='',
+    static_folder='../client/build',
+    template_folder='../client/build'
+    )
 
 
-app = Flask(__name__)
+
 app.config['JWT_SECRET_KEY'] = b'\xb2\xd3B\xb9 \xab\xc0By\x13\x10\x84\xb7M!\x11'
 app.config['JWT_ACCESS_TOKEN_EXPIRES'] = 24 * 60 * 60
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///bank.db'
+# app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URI') #render database url
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.json.compact = False
 # app.secret_key = b'\xb2\xd3B\xb9 \xab\xc0By\x13\x10\x84\xb7M!\x11'
@@ -59,11 +71,6 @@ def missing_token(error):
     return jsonify({'message': 'Request does not contain an access token.', 'error':'token missing'}), 401
 
 
-@app.errorhandler(NotFound)
-def handle_not_found(e):
-    response= make_response("NotFound: The requested resource not found", 404)
-    return response
-
 @jwt.token_in_blocklist_loader #check if the jwt is revocked
 def token_in_blocklist(jwt_header,jwt_data):
     jti = jwt_data['jti']
@@ -72,9 +79,11 @@ def token_in_blocklist(jwt_header,jwt_data):
 # if token is none : it will return false 
     return token is not None
 
-@app.route('/')
-def index():
-    return '<h1>Banking App</h1>'
+
+@app.errorhandler(NotFound)
+def handle_not_found(e):
+    return render_template('index.html', title='Homepage', message='Welcome to our website!')
+
 
 
 class CreateAccount(Resource):
