@@ -30,6 +30,6 @@ flask-jwt-extended = "*"
 [dev-packages]
 
 [requires]
-python_version = "3.8"
+python_version = "3.8.0"
 pip_version = "24.0"
 
