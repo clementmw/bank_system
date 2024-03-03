@@ -1,8 +1,8 @@
 import axios from 'axios'
-import { useState, useEffect} from 'react'
+import { useState, } from 'react'
 
 function Contact() {
-    const [contact, setContact] = useState('')
+    // const [contact, setContact] = useState('')
     const [full_name, setFullName] = useState('')
     const [email, setEmail] = useState('')
     const [message, setMessage] = useState('')
