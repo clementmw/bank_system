@@ -7,7 +7,6 @@ function NormalNavbar() {
     <div className="bg-white text-black  sticky top-0 z-50  ">
     <nav className="container mx-auto flex items-center justify-between py-4">
       <Link to="/" className="text-2xl font-bold text-lime-950">
-        {/* <img src={'} alt="logo" className='w-10 h-10 rounded-full mx-auto' /> */}
         EverGreen Bank
       </Link>
       <div className="flex space-x-4">

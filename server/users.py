@@ -5,8 +5,6 @@ from flask import jsonify
 
 user_bp = Blueprint('user', __name__)
 
-#{"message":"you are not authorized to access this data"}),401
-
 @user_bp.get("/admin")
 @jwt_required()
 def get_all_users():
