@@ -27,8 +27,8 @@ app = Flask(
 
 app.config['JWT_SECRET_KEY'] = b'\xb2\xd3B\xb9 \xab\xc0By\x13\x10\x84\xb7M!\x11'
 app.config['JWT_ACCESS_TOKEN_EXPIRES'] = 24 * 60 * 60
-# app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///bank.db'
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URI') #render database url
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///bank.db'
+# app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URI') #render database url
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.json.compact = False
 
@@ -262,7 +262,7 @@ class ContactList(Resource):
 api.add_resource(ContactList, '/contact')
 
 if __name__ == '__main__':
-    app.run(port=5555, debug=True)
+    app.run(port=5554, debug=True)
 
 
 

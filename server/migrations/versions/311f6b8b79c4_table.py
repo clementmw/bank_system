@@ -1,8 +1,8 @@
 """table
 
-Revision ID: 58d8cec6236e
+Revision ID: 311f6b8b79c4
 Revises: 
-Create Date: 2024-02-28 00:32:45.464656
+Create Date: 2024-03-03 22:40:29.546384
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '58d8cec6236e'
+revision = '311f6b8b79c4'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -29,12 +29,13 @@ def upgrade():
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('customer_name', sa.String(), nullable=True),
     sa.Column('review', sa.String(), nullable=True),
+    sa.Column('rating', sa.Integer(), nullable=True),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('token_blocklist',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('jti', sa.String(), nullable=True),
-    sa.Column('created_at', sa.DateTime(), nullable=False),
+    sa.Column('created_at', sa.DateTime(), nullable=True),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('users',
