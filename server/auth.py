@@ -22,8 +22,8 @@ def register():
     if emailaddress:
         return {'error':'email already exists rename and try again'},404
     else:
-        password = bcrypt.generate_password_hash(hashed_password.encode('utf-8')).decode('utf-8')
-        newuser = User(username=username,phone=phone,email=email,address=address,hashed_password=password)
+        # password = bcrypt.generate_password_hash(hashed_password.encode('utf-8')).decode('utf-8')
+        newuser = User(username=username,phone=phone,email=email,address=address,password=hashed_password)
         db.session.add(newuser)
         db.session.commit() 
         response = make_response(jsonify(newuser.serialize()), 201)
@@ -36,22 +36,23 @@ def login():
     username = data['username']
     user = User.query.filter_by(username = username).first()
     if not user:
-        return {'error': '401 Unauthorized'}, 401 
-    else:
-        if bcrypt.check_password_hash(user.hashed_password,data['password']):
-            access_token = create_access_token(identity=user.username)
-            refresh_token = create_refresh_token(identity=user.username)
-            
-        return jsonify(
-            {
-                "message": "logged in",
-                "tokens": {
-                    "access": access_token,
-                    "refresh": refresh_token
-                }
+        return {'error': 'User not registered'}, 401 
+    
+    if not bcrypt.check_password_hash(user.hashed_password,data['password']):
+                return {'error': '401 Unauthorized'}, 401 
+
+    access_token = create_access_token(identity=user.username)
+    refresh_token = create_refresh_token(identity=user.username)  
+    return jsonify(
+        {
+            "message": "logged in",
+            "tokens": {
+                "access": access_token,
+                "refresh": refresh_token
             }
-  
-        ), 200
+        }
+
+    ), 200
 
 @auth_bp.get('/whoami')
 @jwt_required()
