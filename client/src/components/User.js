@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import TransactionForm from './TransactionForm';
+import LoginNavbar from './LoginNavbar';
 
 function User() {
   const [userData, setUserData] = useState(null);
@@ -62,6 +63,8 @@ function User() {
   // };
 
   return (
+    <div>
+      <LoginNavbar/>
     <div className="container mx-auto p-4">
   <h1 className="text-3xl font-bold mb-4">
     Hello: {userData ? userData.username.toUpperCase() : 'User'}
@@ -71,7 +74,6 @@ function User() {
     <p>Loading user and account data...</p>
   ) : (
     <div className="flex flex-col mt-10 md:flex-row">
-
        <div className="md:w-1/2 pr-4">
           <a href="/newaccount" className="text-blue-500 hover:underline">
             Create a New account
@@ -115,6 +117,8 @@ function User() {
     </div>
   )}
 </div>
+</div>
+
 
  
   

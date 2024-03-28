@@ -3,14 +3,12 @@ import axios from 'axios'
 import { useState} from 'react'
 import { useNavigate } from 'react-router-dom'
 import backgroundimage from '../images/login.jpg'
-
-
-
+import NormalNavbar from './NormalNavbar'
+import toast, { Toaster } from 'react-hot-toast';
 
 function Login() {
   const [username, setUser] = useState('')
   const [password, setPassword] = useState('')
-  const [submit, setSubmit] = useState(null);
 
   const navigate = useNavigate()
 
@@ -19,21 +17,22 @@ const handlesubmit = (e)=> {
 
   axios.post("/auth/login",{username,password})
   .then(res =>{
-    alert('login success! welcome ')
     console.log(res.data)
-    // setSubmit('success')
 
     // store the jwt token in local storage
     localStorage.setItem('access_token', res.data.tokens.access) 
 
-    navigate('/user');
+    toast.success('Login Successful!');
+
+    setTimeout(() => {
+        navigate('/user');
+      }, 1500); 
 
   })
 
   .catch(err =>{
     console.log(err)
-    // alert('wrong details')
-    setSubmit('error')
+    toast.error('Login Failed!');
   }) 
 
   // clear input 
@@ -43,19 +42,14 @@ const handlesubmit = (e)=> {
    
 
   return (
+    <div>
+      <NormalNavbar/>
     <div className="flex items-center justify-center mt-10">
       <div className="flex flex-col md:flex-row">
         <div className="md:w-1/2">
           <img src={backgroundimage} alt="backgroundimage" className="w-full h-full object-cover" />
         </div>
         <form onSubmit={handlesubmit} className="md:w-1/2 p-8">
-          {submit === 'success' && (
-            <div className="text-green-600 mb-4">Login successful!</div>
-          )}
-
-          {submit === 'error' && (
-            <div className="text-red-600 mb-4">Invalid username or password.</div>
-          )}
           <div>
             <h1 className="text-3xl font-bold text-black">Welcome Back</h1>
             <p className="text-gray-500 font-light mb-4">Please enter your details</p>
@@ -106,6 +100,9 @@ const handlesubmit = (e)=> {
         </form>
       </div>
     </div>
+    <Toaster position="top-right" reverseOrder={false} />
+    </div>
+
   )
 }
 

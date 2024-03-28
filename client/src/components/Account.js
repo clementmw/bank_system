@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import LoginNavbar from './LoginNavbar';
+import toast from 'react-hot-toast';
 
 function Account() {
   const [account_type, setAccountType] = useState('');
-  const [successMessage, setSuccessMessage] = useState('');
-  const [errorMessage, setErrorMessage] = useState('');
+
 //   const [balance,setBalance] = useState('')
   const navigate = useNavigate();
   const handleSubmit = (e) => {
@@ -30,19 +31,28 @@ function Account() {
     axios.post('/account', { account_type}, config)
       .then((res) => {
         console.log(res.data);
-        alert('Account created successfully!');
-        setErrorMessage('');
-        navigate('/user')
+
+        toast.success('Account created successfully!');
+
+        // delay navigation to user page
+        setTimeout(() => {
+          navigate('/user');
+        },1000)
+
       })
       .catch((err) => {
         console.error(err);
-        setErrorMessage('Error creating account. Please try again.');
-        setSuccessMessage('');
+        toast.error('Error creating account');
       });
   };
 
   return (
+    <div>
+      <div>
+        <LoginNavbar/>
+      </div>
     <div className="max-w-md mx-auto p-6 bg-gray-100 rounded-md shadow-md">
+
   <h1 className="text-3xl font-bold mb-6">Create Account</h1>
 
   <form onSubmit={handleSubmit} className="space-y-4">
@@ -67,10 +77,10 @@ function Account() {
       <button className="bg-lime-900 text-white px-4 py-2">Create</button>
     </div>
   </form>
-
-  {successMessage && <p className="mt-4 text-green-500">{successMessage}</p>}
-  {errorMessage && <p className="mt-4 text-red-500">{errorMessage}</p>}
 </div>
+  {/* <Toaster position="top-left" reverseOrder={false}/> */}
+</div>
+
 
   );
 }

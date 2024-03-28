@@ -1,5 +1,6 @@
 import React, { useEffect ,useState} from 'react'
 import axios from 'axios';
+import LoginNavbar from './LoginNavbar';
 // import { useAuth } from './AuthProvider';
 
 
@@ -34,6 +35,7 @@ function Transaction() {
 
   return (
     <div>
+      <LoginNavbar/>
       <h2 className="text-2xl font-bold mt-4">Transaction History</h2>
       {transactionData ? (
         transactionData.map((transaction) => (

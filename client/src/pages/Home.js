@@ -1,6 +1,7 @@
 import React from 'react';
 import backgroundimage from '../images/homepage.jpg';
 import { useNavigate } from 'react-router-dom';
+import NormalNavbar from '../components/NormalNavbar';
 
 function Home() {
   const navigate = useNavigate();
@@ -10,6 +11,7 @@ function Home() {
 
   return (
     <div>
+      <NormalNavbar/>
     <div className='relative w-full h-screen flex items-right justify-end overflow-hidden'>     
       <div className="absolute top-0 left-0 w-full h-full z-0">
         <img src={backgroundimage} alt='home' className='w-full h-full object-cover'/>

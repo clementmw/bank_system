@@ -121,6 +121,7 @@ const getErrorMessage = (transactionType, amount,balance,receiver_id,current_use
     
 
   return (
+    <div>
     <div className="max-w-md mx-auto p-4rounded-md shadow-md ">
       <h2 className="text-2xl font-semibold mb-4">Transaction Form</h2>
       <form onSubmit={handleSubmit}>
@@ -193,6 +194,8 @@ const getErrorMessage = (transactionType, amount,balance,receiver_id,current_use
       </form>
 
     </div>
+    </div>
+
   );
 }
 

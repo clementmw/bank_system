@@ -2,6 +2,7 @@ import React from 'react'
 import { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import NormalNavbar from './NormalNavbar';
 
 function Register() {
   const [username, setUsername] = useState('');
@@ -36,6 +37,8 @@ function Register() {
   }
 
   return (
+    <div>
+      <NormalNavbar/>
     <div className='flex items-center justify-center'>    
       <form onSubmit={handleSubmit} className="md:w-1/2 p-8 bg-slate-100">
       {submit === 'success' && (
@@ -128,6 +131,8 @@ function Register() {
         </div>
       </form>
     </div>
+    </div>
+
   )
 }
 

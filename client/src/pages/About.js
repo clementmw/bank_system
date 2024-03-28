@@ -1,8 +1,12 @@
 import React from 'react';
 import backgroundimage from '../images/about.jpg';
+import NormalNavbar from '../components/NormalNavbar';
 
 function About() {
   return (
+    <div>
+
+    <NormalNavbar/>
     <div className="flex items-center justify-center mt-10">
       <div className="flex flex-col md:flex-row">
         <div className="md:w-1/2">
@@ -23,6 +27,8 @@ function About() {
         </div>
       </div>
     </div>
+    </div>
+
   );
 }
 

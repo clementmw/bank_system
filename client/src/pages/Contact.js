@@ -1,5 +1,6 @@
 import axios from 'axios'
 import { useState, } from 'react'
+import NormalNavbar from '../components/NormalNavbar'
 
 function Contact() {
     // const [contact, setContact] = useState('')
@@ -26,9 +27,9 @@ function Contact() {
       }
     
   return (
+    <div>
+      <NormalNavbar/>
     <div className="flex items-center justify-center p-4 bg-white">
- 
-  <div>
     <div className="bg-white p-4 border rounded-md shadow-md">
       <form onSubmit={handleSubmit}>
         {submit === 'success' && (
