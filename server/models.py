@@ -14,7 +14,7 @@ class User(db.Model,SerializerMixin):
     __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key = True)
     username = db.Column(db.String, nullable = False, unique = True)
-    phone = db.Column(db.Integer)
+    phone = db.Column(db.String, unique= True)
     email = db.Column(db.String)
     address = db.Column(db.String)
     hashed_password = db.Column(db.String, nullable = False)
