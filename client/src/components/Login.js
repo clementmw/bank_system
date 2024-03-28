@@ -28,6 +28,10 @@ const handlesubmit = (e)=> {
         navigate('/user');
       }, 1500); 
 
+  // clear input 
+  setUser('')
+  setPassword('')
+
   })
 
   .catch(err =>{
@@ -35,9 +39,6 @@ const handlesubmit = (e)=> {
     toast.error('Login Failed!');
   }) 
 
-  // clear input 
-  setUser('')
-  setPassword('')
 }
    
 
