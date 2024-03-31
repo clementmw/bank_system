@@ -8,10 +8,10 @@ bcrypt = Bcrypt()
 from datetime import datetime
 
 with app.app_context():
-    # User.query.delete()
+    User.query.delete()
     # Account.query.delete()
     # Transaction.query.delete()
-    Reviews.query.delete()
+    # Reviews.query.delete()
     db.session.commit()
     # Include this code after initializing your Flask app and defining your models and routes
 

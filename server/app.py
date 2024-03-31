@@ -12,6 +12,7 @@ from werkzeug.exceptions import NotFound
 from auth import auth_bp
 from users import user_bp
 import random
+from flask_mail import Mail
 
 from dotenv import load_dotenv
 load_dotenv()
@@ -30,6 +31,13 @@ app.config['JWT_ACCESS_TOKEN_EXPIRES'] = 24 * 60 * 60
 # app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///bank.db'
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URI') #render database url
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['MAIL_SERVER'] = 'smtp.googlemail.com'
+app.config['MAIL_PORT'] = 587
+app.config['MAIL_USE_TLS'] = True
+app.config['MAIL_USERNAME'] = 'evergreenbank7@gmail.com'
+app.config['MAIL_PASSWORD'] = 'hmnzrzeikmkwrsal'
+app.config['MAIL_DEFAULT_SENDER'] = 'evergreenbank7@gmail.com'
+
 app.json.compact = False
 
 
@@ -40,6 +48,7 @@ bcrypt = Bcrypt(app)
 CORS(app) #connect frontend 
 jwt = JWTManager()
 jwt.init_app(app)
+mail = Mail(app)
 
 # register blueprint
 app.register_blueprint(auth_bp, url_prefix='/auth')

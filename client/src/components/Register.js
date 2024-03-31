@@ -3,6 +3,7 @@ import { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import NormalNavbar from './NormalNavbar';
+import toast, { Toaster } from 'react-hot-toast';
 
 function Register() {
   const [username, setUsername] = useState('');
@@ -26,9 +27,15 @@ function Register() {
     })
 
     .then (res=>{
-      // setSubmit('success')
-      // console.log(res.data)
-      navigate('/login')
+      console.log(res.data)
+
+      toast.success('Registered Successfully!');
+      toast.success('Email sent Successfully!');
+
+
+      setTimeout(() => {
+        navigate('/login')
+      }, 1500); 
     })
     .catch(err=>{
       console.log(err)
@@ -131,6 +138,8 @@ function Register() {
         </div>
       </form>
     </div>
+    <Toaster position="top-right" reverseOrder={false} />
+
     </div>
 
   )

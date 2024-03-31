@@ -26,10 +26,10 @@ six = "*"
 werkzeug = "*"
 flask-bcrypt = "*"
 flask-jwt-extended = "*"
+flask-mail = "*"
 
 [dev-packages]
 
 [requires]
-python_version = "3.10.0"
+python_version = "3.10.12"
 pip_version = "24.0"
-

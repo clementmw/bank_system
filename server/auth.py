@@ -4,7 +4,8 @@ from flask_jwt_extended import create_access_token,create_refresh_token,jwt_requ
 from flask_jwt_extended import get_jwt_identity
 
 auth_bp = Blueprint('auth', __name__)
-
+# fix phonenumber verification
+# fix user firstname and lastname
 @auth_bp.post('/register')
 def register():
     data = request.get_json()
@@ -16,18 +17,32 @@ def register():
 # check username,email exists in database
     user = User.query.filter_by(username=username).first()
     emailaddress = User.query.filter_by(email=email).first()
+    phoneNumber = User.query.filter_by(phone=phone).first()
 
     if user:
         return {'error':'username already exists rename and try again'},404
     if emailaddress:
         return {'error':'email already exists rename and try again'},404
+    if phoneNumber:
+         return {'error':'phone number already exists rename and try again'},404
     else:
         # password = bcrypt.generate_password_hash(hashed_password.encode('utf-8')).decode('utf-8')
-        newuser = User(username=username,phone=phone,email=email,address=address,password=hashed_password)
-        db.session.add(newuser)
+        new_user = User(username=username,phone=phone,email=email,address=address,password=hashed_password)
+        db.session.add(new_user)
         db.session.commit() 
-        response = make_response(jsonify(newuser.serialize()), 201)
-        return response  
+        send_user_signup_mail(new_user)
+        return jsonify({
+            "message": "User registered successfully",
+            "user":new_user.serialize()
+        }), 200 
+
+def send_user_signup_mail(user):
+    from app import mail
+    subject = "Welcome to Evergreen Bank"
+    body = f"Dear {user.username},\n\nThank you for registering on our Evergreen Bank. We extend our sincere gratitude to you for choosing Evergreen Bank as your financial institution of choice. Your decision to entrust us with your financial needs is truly appreciated.\n\nShould you require any assistance or have any inquiries, Please do not hesitate to reach out to us. Our dedicated team is here to provide you with the highest level of service and support.\n\n Best regards,\n Evergreen Bank Team"
+    recipients = [user.email]
+    mail.send_message(subject=subject, recipients=recipients, body=body)
+ 
     
     
 @auth_bp.post('/login')
