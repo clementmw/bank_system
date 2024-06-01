@@ -10,6 +10,8 @@ import User from './components/User';
 import Transaction from './components/Transaction';
 import TransactionForm from './components/TransactionForm';
 import Account from './components/Account';
+import Frequent from './pages/Frequent';
+import PageNotFound from './Reusable/PageNotFound';
 
 
 
@@ -22,7 +24,7 @@ function App() {
        
       <Routes>
       <Route path="/" element={<Home />} /> 
-        <Route path = '/signup' element={<Register/>}/>
+        <Route path = '/register' element={<Register/>}/>
         <Route path= '/login' element={<Login />}/>
         <Route path = '/testimonial' element={<Testimonial/>}/>
         <Route path = '/contact' element={<Contact/>}/>
@@ -31,6 +33,9 @@ function App() {
         <Route path='/transaction' element = {<Transaction/>}/>
         <Route path = '/transfer' element = {<TransactionForm/>}/>
         <Route path = '/newaccount' element = {<Account/>}/>
+        <Route path='/FrequentQA' element = {<Frequent/>}/>
+
+        <Route path = '*' element = {<PageNotFound/>}/>
 
       </Routes>
     </div>
