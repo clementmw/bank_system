@@ -10,7 +10,8 @@ import User from './components/User';
 import Transaction from './components/Transaction';
 import TransactionForm from './components/TransactionForm';
 import Account from './components/Account';
-import NotFound from './Reusable/NotFound';
+import Frequent from './pages/Frequent';
+import PageNotFound from './Reusable/PageNotFound';
 
 
 
@@ -32,7 +33,9 @@ function App() {
         <Route path='/transaction' element = {<Transaction/>}/>
         <Route path = '/transfer' element = {<TransactionForm/>}/>
         <Route path = '/newaccount' element = {<Account/>}/>
-        <Route path = '*' element = {<NotFound/>}/>
+        <Route path='/FrequentQA' element = {<Frequent/>}/>
+
+        <Route path = '*' element = {<PageNotFound/>}/>
 
       </Routes>
     </div>
