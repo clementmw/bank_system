@@ -1,148 +1,172 @@
-import React from 'react'
-import { useState } from 'react';
+import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import NormalNavbar from './NormalNavbar';
 import toast, { Toaster } from 'react-hot-toast';
+import NewNav from '../pages/NewNav';
+import { FaEyeSlash, FaEye } from 'react-icons/fa';
+import Footer from '../pages/Footer';
 
 function Register() {
-  const [username, setUsername] = useState('');
-  const [phone, setPhone] = useState('');
+  const [username, setUserName] = useState('');
+  const [phone, setPhoneNumber] = useState('');
   const [email, setEmail] = useState('');
   const [address, setAddress] = useState('');
-  const [password, setPassword] = useState('');
-  const [submit, setSubmit] = useState(null);
+  const [password, setUserPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [errormsg,setError] = useState('')
 
   const navigate = useNavigate();
 
-  const handleSubmit= (e)=>{
+  const handleSubmit = (e) => {
     e.preventDefault();
+    if (password === confirmPassword) {
+      axios.post('/auth/register', {
+        username,
+        phone,
+        email,
+        address,
+        password,
+      })
+        .then((res) => {
+          toast.success('Registered Successfully!');
+          toast.success('Email sent Successfully!');
+          setTimeout(() => {
+            navigate('/login');
+          }, 1500);
+        })
+        .catch((error) => {
+          const errorMsg = error.response?.data?.error || 'An error occurred';
+          setError(errorMsg);
+          
+        });
+    } else {
+      toast.error('Passwords do not match.');
+    }
+  };
 
-    axios.post('/auth/register',{
-      username,
-      phone,
-      email,
-      address,
-      password
-    })
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
 
-    .then (res=>{
-      console.log(res.data)
-
-      toast.success('Registered Successfully!');
-      toast.success('Email sent Successfully!');
-
-
-      setTimeout(() => {
-        navigate('/login')
-      }, 1500); 
-    })
-    .catch(err=>{
-      console.log(err)
-      setSubmit('error')
-    })
-  }
+  const toggleConfirmPasswordVisibility = () => {
+    setShowConfirmPassword(!showConfirmPassword);
+  };
 
   return (
     <div>
-      <NormalNavbar/>
-    <div className='flex items-center justify-center'>    
-      <form onSubmit={handleSubmit} className="md:w-1/2 p-8 bg-slate-100">
-      {submit === 'success' && (
-          <div className='text-green-600 mb-4'>Account created successfully!</div>
-        )}
-
-        {submit === 'error' && (
-          <div className='text-red-600 mb-4'>Check on your details username or email exists.</div>
-        )}
-        <div>
-        <h1 className="text-3xl font-bold text-black">Welcome to EverGreen</h1>
-        <p className="text-gray-500 font-light mb-4">Please enter your details</p>
-        </div>
-        <div className='mb-4'>
-        <label  className="block text-gray-700 text-sm font-bold mb-2">
-        Username
-          <input type='text'
-            placeholder='Enter username'
-            name='username'
-            value={username}
-            onChange={e => setUsername(e.target.value)}
-            className="mt-1 p-2 w-full border rounded"
-            required
-          />  
-        </label>
-        </div>
-
-        <div className='mb-4'>
-        <label  className="block text-gray-700 text-sm font-bold mb-2">
-        PhoneNumber
-          <input type='text'
-            placeholder='Enter Phonenumber'
-            name='phone'
-            value={phone}
-            onChange={e=>setPhone(e.target.value)}
-            className="mt-1 p-2 w-full border rounded"
-            required
-          />  
-        </label>
-        </div>
-        <div className='mb-4'>
-        <label className="block text-gray-700 text-sm font-bold mb-2">
-        Email
-          <input type='text'
-            placeholder='Enter emailaddress'
-            name='email'
-            value={email}
-            onChange={e => setEmail(e.target.value)}
-            className="mt-1 p-2 w-full border rounded"
-            required
-          />  
-        </label>
-        </div>
-
-        <div className='mb-4'>
-        <label  className="block text-gray-700 text-sm font-bold mb-2">
-        Address
-          <input type='text'
-            placeholder='Enter your address'
-            name='address'
-            value={address}
-            onChange={e => setAddress(e.target.value)}
-            className="mt-1 p-2 w-full border rounded"
-            required
-          />  
-        </label>
-        </div>
-
-        <div className='mb-4'>
-        <label className="block text-gray-700 text-sm font-bold mb-2">
-        Password
-          <input type='password'
-            placeholder='Enter Password'
-            name='username'
-            value={password}
-            onChange={e => setPassword(e.target.value)}
-            className="mt-1 p-2 w-full border rounded"
-            required
-          />  
-        </label>
-        </div>
-        <div className='mb-4'>
-          <button className="bg-lime-900 text-white px-4 py-2 rounded-sm">Create Account</button>
-        </div>
-        <div>
-          <p className='text-gray-600'>Already have an account? {''}
-          <a href='/login'className="text-blue-500 hover:underline">
-            Login Here</a>
-            </p>
-        </div>
-      </form>
+      <NewNav />
+      <div>
+        <section className="bg-lime-100 min-h-screen flex justify-center items-center lg:my-0">
+          <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
+            <div className="w-full bg-white rounded-lg shadow md:mt-0 sm:max-w-md xl:p-0">
+              <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
+                {/* <h1>Welcome To Evergreen</h1> */}
+                <h1 className="text-xl text-center font-bold leading-tight tracking-tight text-gray-900 md:text-2xl">
+                  Create a User account
+                </h1>
+                {errormsg && <p className='bg-red-500'>{errormsg}</p>}
+                <form className="space-y-4 md:space-y-6 " onSubmit={handleSubmit}>
+                  <div>
+                    <input
+                      type="text"
+                      name="username"
+                      id="username"
+                      onChange={(e) => setUserName(e.target.value)}
+                      className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
+                      placeholder="Username"
+                      required
+                    />
+                  </div>
+                  <div>
+                    <input
+                      type="tel"
+                      name="phone"
+                      id="phone"
+                      onChange={(e) => setPhoneNumber(e.target.value)}
+                      maxLength={10}
+                      className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
+                      placeholder="Phone Number e.g 07xxxx"
+                      required
+                    />
+                  </div>
+                  <div>
+                    <input
+                      type="email"
+                      name="email"
+                      id="email"
+                      onChange={(e) => setEmail(e.target.value)}
+                      className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
+                      placeholder="E-mail e.g name@example.com"
+                      required
+                    />
+                  </div>
+                  <div>
+                    <input
+                      type="text"
+                      name="address"
+                      id="address"
+                      onChange={(e) => setAddress(e.target.value)}
+                      className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
+                      placeholder="Address"
+                    />
+                  </div>
+                  <div className='relative'>
+                    <input
+                      type={showPassword ? "text" : "password"}
+                      name="password"
+                      id="password"
+                      onChange={(e) => setUserPassword(e.target.value)}
+                      className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
+                      placeholder="Password"
+                      required
+                    />
+                    <button
+                      title='Show Password'
+                      onClick={togglePasswordVisibility}
+                      className="absolute inset-y-0 right-2 flex items-center"
+                    >
+                      {showPassword ? <FaEye /> : <FaEyeSlash />}
+                    </button>
+                  </div>
+                  <div className='relative'>
+                    <input
+                      type={showConfirmPassword ? "text" : "password"}
+                      name="confirm_password"
+                      id="confirm_password"
+                      onChange={(e) => setConfirmPassword(e.target.value)}
+                      className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
+                      placeholder="Confirm Password"
+                      required
+                    />
+                    <button
+                      title='Show Confirm Password'
+                      onClick={toggleConfirmPasswordVisibility}
+                      className="absolute inset-y-0 right-2 flex items-center"
+                    >
+                      {showConfirmPassword ? <FaEye /> : <FaEyeSlash />}
+                    </button>
+                  </div>
+                  <button
+                    type="submit"
+                    className="w-full text-black bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
+                  >
+                    Create an account
+                  </button>
+                  <p className="text-sm font-light text-gray-500">
+                    Already have an account? <a href="/login" className="font-medium text-primary-600 hover:underline">Login here</a>
+                  </p>
+                </form>
+              </div>
+            </div>
+          </div>
+          <Toaster position="top-center" toastOptions={{ duration: 2000 }} />
+        </section>
+      </div>
+      <Footer/>
     </div>
-    <Toaster position="top-right" reverseOrder={false} />
-
-    </div>
-
-  )
+  );
 }
 
-export default Register
+export default Register;
