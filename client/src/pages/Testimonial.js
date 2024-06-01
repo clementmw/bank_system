@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import axios  from 'axios'  
-import NormalNavbar from '../components/NormalNavbar';
+import NewNav from './NewNav';
 
 
 const renderStars = (rating) => {
@@ -36,7 +36,7 @@ function Testimonial() {
    
   return (
     <div>
-      <NormalNavbar/>
+      <NewNav/>
     <div className="container mx-auto mt-8">
     <h2 className="text-lime-900 text-3xl font-bold mb-4 text-center">What Are The Clients<br/>Saying About Us</h2>
 
