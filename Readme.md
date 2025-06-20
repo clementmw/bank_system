@@ -26,33 +26,5 @@ In Evergreen our mission is to provide a comprehensive suite of banking services
 - Security: Your financial security is our top priority. Benefit from robust security measures to ensure the safety of your accounts and transactions.
 
 ## Technologies Used
-    Backend: Flask, SQLAlchemy
     Frontend: React,Tailwind
     Authentication: JWT (JSON Web Tokens)
-
-## Installation
-
-        ```bash
-        # Clone the repository
-        git clone [`git@github.com:clementmw/bank_system.git`]
-
-        # Navigate to the project directory
-        cd [bank_system]
-
-        # Install dependencies
-        Install dependencies
-            1. cd into the client folder 
-            2. run `npm install` after installation run `npm start` 
-            3. cd into server folder 
-            4. run the server located in the `app.py`
-
-## Contribution Guidelines
-If you would like to contribute to the project, please follow these guidelines:
-- Fork the repository.
-- Create a new branch for your feature or bug fix: `git checkout -b feature-name`.
-- Commit your changes: `git commit -m 'Add new feature'`.
-- Push to the branch: `git push origin feature-name`.
-- Create a pull request.
-
-## Author
-Clement Macharia
